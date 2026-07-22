@@ -9,10 +9,15 @@ import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import ProfileDropdown from "./ProfileDropdown"; 
 import { useTheme } from "../../context/ThemeContext";
+import NotificationDropdown from "./NotificationDropdown";
+import { getUnreadCount } from "../../services/notificationService";
+
 
 const Navbar = () => {
   const { darkMode, toggleTheme } = useTheme();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+const [unreadCount, setUnreadCount] = useState(0);
   const profileRef = useRef(null);
   const { user } = useAuth();
   useEffect(() => {
@@ -22,15 +27,34 @@ const Navbar = () => {
       !profileRef.current.contains(event.target)
     ) {
       setShowProfileMenu(false);
+      setShowNotifications(false);
     }
   };
-
+  
   document.addEventListener("mousedown", handleClickOutside);
 
   return () => {
     document.removeEventListener("mousedown", handleClickOutside);
   };
 }, []);
+
+useEffect(() => {
+  loadUnreadCount();
+
+  const interval = setInterval(loadUnreadCount, 30000);
+
+  return () => clearInterval(interval);
+}, []);
+
+const loadUnreadCount = async () => {
+  try {
+    const data = await getUnreadCount();
+    setUnreadCount(data.count);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
   
   return (
     <header className="bg-white dark:bg-slate-900 dark:text-white border-b border-gray-200 dark:border-slate-700 shadow-sm px-6 py-4 flex items-center justify-between">
@@ -51,17 +75,34 @@ const Navbar = () => {
 
       {/* Right Side */}
 
-      <div className="flex items-center gap-5">
+      <div className="flex items-center gap-5 relative" ref={profileRef}>
+
 
         {/* Notification */}
 
-        <button className="relative p-2 rounded-xl hover:bg-gray-100 transition">
+<div className="relative">
 
-          <Bell size={22} />
+  <button
+    onClick={() => setShowNotifications(!showNotifications)}
+    className="relative p-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 transition"
+  >
+    <Bell size={22} />
 
-          <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full"></span>
+    {unreadCount > 0 && (
+      <span className="absolute -top-1 -right-1 bg-red-600 text-white rounded-full min-w-[18px] h-[18px] text-[10px] flex items-center justify-center">
+        {unreadCount}
+      </span>
+    )}
+  </button>
 
-        </button>
+  {showNotifications && (
+    <NotificationDropdown
+      setUnreadCount={setUnreadCount}
+      onClose={() => setShowNotifications(false)}
+    />
+  )}
+
+</div>
 
         {/* Dark Mode */}
 
@@ -74,7 +115,7 @@ const Navbar = () => {
 
        {/* User */}
 
-<div className="relative" ref={profileRef}>
+<div className="relative">
   <button
     onClick={() => setShowProfileMenu(!showProfileMenu)}
     className="flex items-center gap-3 hover:bg-gray-100 rounded-xl px-3 py-2 transition"

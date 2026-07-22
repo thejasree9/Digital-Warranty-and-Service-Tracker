@@ -216,6 +216,7 @@ public class ProductServiceImpl implements ProductService {
                 .model(product.getModel())
                 .serialNumber(product.getSerialNumber())
                 .purchaseDate(product.getPurchaseDate())
+                .createdAt(product.getCreatedAt())
                 .price(product.getPrice())
                 .invoiceUrl(product.getInvoiceUrl())
                 .build();

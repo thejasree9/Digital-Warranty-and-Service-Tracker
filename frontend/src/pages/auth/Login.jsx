@@ -31,8 +31,8 @@ export default function Login() {
 console.log(response);
 
 login({
-  token: response.token,
-  user: response.user,
+  token: response.data.token,
+  user: response.data.user,
 });
 
       navigate("/dashboard");

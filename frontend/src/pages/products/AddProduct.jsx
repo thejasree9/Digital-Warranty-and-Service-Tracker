@@ -1,204 +1,547 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+
+import {
+  ArrowLeft,
+  Save,
+  Upload,
+  Image as ImageIcon,
+} from "lucide-react";
+
 import { addProduct } from "../../services/productService";
 
-
 export default function AddProduct() {
+
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
-const [file, setFile] = useState(null);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm();
+  const [file, setFile] = useState(null);
 
-  const onSubmit = async (data) => {
-    try {
-      setLoading(true);
+  const [preview, setPreview] = useState("");
 
-      const payload = {
-        ...data,
-        price: Number(data.price),
-      };
+  const [product, setProduct] = useState({
 
-      const response = await addProduct(payload, file);
+    productName: "",
 
-      toast.success(response.message || "Product Added Successfully");
+    brand: "",
 
-      reset();
-        setFile(null);
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Failed to Add Product"
-      );
-    } finally {
-      setLoading(false);
-    }
+    model: "",
+
+    serialNumber: "",
+
+    purchaseDate: "",
+
+    price: "",
+
+    invoiceUrl: ""
+
+  });
+
+  const handleChange = (e) => {
+
+    setProduct({
+
+      ...product,
+
+      [e.target.name]: e.target.value
+
+    });
+
   };
 
-  return (
-    <div className="min-h-screen bg-gray-100 flex justify-center items-center py-10">
-      <div className="w-full max-w-3xl bg-white rounded-xl shadow-lg p-8">
+  const handleFileChange = (e) => {
 
-        <h1 className="text-3xl font-bold text-center mb-8">
-          Add Product
-        </h1>
+    const selected = e.target.files[0];
 
-        <form onSubmit={handleSubmit(onSubmit)}>
+    if (!selected) return;
 
-          {/* Product Name */}
+    setFile(selected);
+
+    setPreview(URL.createObjectURL(selected));
+
+  };
+
+  const validate = () => {
+
+    if (!product.productName.trim()) {
+
+      toast.error("Product name is required");
+
+      return false;
+
+    }
+
+    if (!product.brand.trim()) {
+
+      toast.error("Brand is required");
+
+      return false;
+
+    }
+
+    if (!product.model.trim()) {
+
+      toast.error("Model is required");
+
+      return false;
+
+    }
+
+    if (!product.purchaseDate) {
+
+      toast.error("Purchase date is required");
+
+      return false;
+
+    }
+
+    if (!product.price) {
+
+      toast.error("Price is required");
+
+      return false;
+
+    }
+
+    return true;
+
+  };
+
+  const handleSubmit = async (e) => {
+
+    e.preventDefault();
+
+    if (!validate()) return;
+
+    try {
+
+      setLoading(true);
+
+      const response = await addProduct(
+
+        product,
+
+        file
+
+      );
+
+      if (response.success) {
+
+        toast.success("Product Added Successfully");
+
+        navigate("/products");
+
+      } else {
+
+        toast.error(response.message);
+
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
+      toast.error("Failed to add product");
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+  };
+    return (
+
+    <div className="min-h-screen bg-slate-100 p-8">
+
+      <div className="max-w-5xl mx-auto">
+
+        {/* Header */}
+
+        <div className="flex items-center justify-between mb-8">
+
           <div>
-            <label className="font-medium">
-              Product Name
-            </label>
 
-            <input
-              {...register("productName", {
-                required: "Product Name is required",
-              })}
-              className="w-full border rounded-lg p-2 mt-2"
-            />
+            <h1 className="text-3xl font-bold text-slate-800">
 
-            <p className="text-red-500 text-sm">
-              {errors.productName?.message}
+              Add Product
+
+            </h1>
+
+            <p className="text-gray-500 mt-2">
+
+              Register a new product with purchase details.
+
             </p>
+
           </div>
 
-          {/* Brand */}
-          <div>
-            <label className="font-medium">
-              Brand
-            </label>
+          <button
 
-            <input
-              {...register("brand", {
-                required: "Brand is required",
-              })}
-              className="w-full border rounded-lg p-2 mt-2"
-            />
+            onClick={() => navigate("/products")}
 
-            <p className="text-red-500 text-sm">
-              {errors.brand?.message}
-            </p>
+            className="flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white px-5 py-3 rounded-xl transition"
+
+          >
+
+            <ArrowLeft size={18} />
+
+            Back
+
+          </button>
+
+        </div>
+
+        {/* Form */}
+
+        <form
+
+          onSubmit={handleSubmit}
+
+          className="bg-white rounded-2xl shadow-lg p-8"
+
+        >
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            {/* Left Side */}
+
+            <div className="space-y-5">
+
+              {/* Product Name */}
+
+              <div>
+
+                <label className="block mb-2 font-medium text-gray-700">
+
+                  Product Name *
+
+                </label>
+
+                <input
+
+                  type="text"
+
+                  name="productName"
+
+                  value={product.productName}
+
+                  onChange={handleChange}
+
+                  placeholder="Dell Inspiron Laptop"
+
+                  className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+
+                />
+
+              </div>
+
+              {/* Brand */}
+
+              <div>
+
+                <label className="block mb-2 font-medium text-gray-700">
+
+                  Brand *
+
+                </label>
+
+                <input
+
+                  type="text"
+
+                  name="brand"
+
+                  value={product.brand}
+
+                  onChange={handleChange}
+
+                  placeholder="Dell"
+
+                  className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+
+                />
+
+              </div>
+
+              {/* Model */}
+
+              <div>
+
+                <label className="block mb-2 font-medium text-gray-700">
+
+                  Model *
+
+                </label>
+
+                <input
+
+                  type="text"
+
+                  name="model"
+
+                  value={product.model}
+
+                  onChange={handleChange}
+
+                  placeholder="Inspiron 15"
+
+                  className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+
+                />
+
+              </div>
+
+              {/* Serial Number */}
+
+              <div>
+
+                <label className="block mb-2 font-medium text-gray-700">
+
+                  Serial Number
+
+                </label>
+
+                <input
+
+                  type="text"
+
+                  name="serialNumber"
+
+                  value={product.serialNumber}
+
+                  onChange={handleChange}
+
+                  placeholder="SN123456789"
+
+                  className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+
+                />
+
+              </div>
+
+            </div>
+
+            {/* Right Side */}
+
+            <div className="space-y-5">
+
+              {/* Purchase Date */}
+
+              <div>
+
+                <label className="block mb-2 font-medium text-gray-700">
+
+                  Purchase Date *
+
+                </label>
+
+                <input
+
+                  type="date"
+
+                  name="purchaseDate"
+
+                  value={product.purchaseDate}
+
+                  onChange={handleChange}
+
+                  className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+
+                />
+
+              </div>
+
+              {/* Price */}
+
+              <div>
+
+                <label className="block mb-2 font-medium text-gray-700">
+
+                  Purchase Price *
+
+                </label>
+
+                <input
+
+                  type="number"
+
+                  name="price"
+
+                  value={product.price}
+
+                  onChange={handleChange}
+
+                  placeholder="50000"
+
+                  className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+
+                />
+
+              </div>
+                            {/* Invoice Upload */}
+
+              <div>
+
+                <label className="block mb-2 font-medium text-gray-700">
+
+                  Product Invoice
+
+                </label>
+
+                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-blue-300 rounded-2xl cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition">
+
+                  {preview ? (
+
+                    <img
+                      src={preview}
+                      alt="Invoice Preview"
+                      className="h-full object-contain rounded-xl"
+                    />
+
+                  ) : (
+
+                    <>
+
+                      <ImageIcon
+                        size={55}
+                        className="text-blue-500"
+                      />
+
+                      <p className="mt-3 text-gray-600">
+
+                        Click to upload invoice image
+
+                      </p>
+
+                      <p className="text-sm text-gray-400 mt-1">
+
+                        JPG, PNG or JPEG
+
+                      </p>
+
+                    </>
+
+                  )}
+
+                  <input
+                    type="file"
+                    accept="image/*,.pdf"
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
+
+                </label>
+
+              </div>
+
+            </div>
+
           </div>
 
-          {/* Model */}
-          <div>
-            <label className="font-medium">
-              Model
-            </label>
+          {/* Buttons */}
 
-            <input
-              {...register("model", {
-                required: "Model is required",
-              })}
-              className="w-full border rounded-lg p-2 mt-2"
-            />
+          <div className="flex justify-end gap-4 mt-10">
 
-            <p className="text-red-500 text-sm">
-              {errors.model?.message}
-            </p>
-          </div>
+            <button
+              type="button"
+              onClick={() => navigate("/products")}
+              className="px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-100 transition"
+            >
 
-          {/* Serial Number */}
-          <div>
-            <label className="font-medium">
-              Serial Number
-            </label>
+              Cancel
 
-            <input
-              {...register("serialNumber", {
-                required: "Serial Number is required",
-              })}
-              className="w-full border rounded-lg p-2 mt-2"
-            />
-
-            <p className="text-red-500 text-sm">
-              {errors.serialNumber?.message}
-            </p>
-          </div>
-
-          {/* Purchase Date */}
-          <div>
-            <label className="font-medium">
-              Purchase Date
-            </label>
-
-            <input
-              type="date"
-              {...register("purchaseDate", {
-                required: "Purchase Date is required",
-              })}
-              className="w-full border rounded-lg p-2 mt-2"
-            />
-
-            <p className="text-red-500 text-sm">
-              {errors.purchaseDate?.message}
-            </p>
-          </div>
-
-          {/* Price */}
-          <div>
-            <label className="font-medium">
-              Price
-            </label>
-
-            <input
-              type="number"
-              step="0.01"
-              {...register("price", {
-                required: "Price is required",
-                min: {
-                  value: 1,
-                  message: "Price must be greater than 0",
-                },
-              })}
-              className="w-full border rounded-lg p-2 mt-2"
-            />
-
-            <p className="text-red-500 text-sm">
-              {errors.price?.message}
-            </p>
-          </div>
-
-          {/* Invoice Upload */}
-
-<div>
-  <label className="font-medium">
-    Invoice / Product Image
-  </label>
-
-  <input
-    type="file"
-    accept="image/*,.pdf"
-    onChange={(e) => setFile(e.target.files[0])}
-    className="w-full border rounded-lg p-2 mt-2"
-  />
-
-  {file && (
-    <p className="text-green-600 text-sm mt-2">
-      Selected File: {file.name}
-    </p>
-  )}
-</div>
-
-          {/* Submit Button */}
-          <div className="md:col-span-2">
+            </button>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white px-8 py-3 rounded-xl transition"
             >
-              {loading ? "Adding Product..." : "Add Product"}
+
+              {loading ? (
+
+                <>
+
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+
+                  Saving...
+
+                </>
+
+              ) : (
+
+                <>
+
+                  <Save size={18} />
+
+                  Save Product
+
+                </>
+
+              )}
+
             </button>
 
           </div>
-        </form>
-      </div>
+
+                {/* Product Information */}
+
+        <div className="mt-10 border-t pt-6">
+
+          <h2 className="text-xl font-semibold text-slate-800 mb-5">
+            Product Information
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-6">
+
+            <div className="bg-blue-50 rounded-xl p-5">
+
+              <h3 className="font-semibold text-blue-700 mb-2">
+                💡 Tips
+              </h3>
+
+              <ul className="space-y-2 text-gray-600 text-sm">
+
+                <li>• Enter the exact product name.</li>
+
+                <li>• Use the serial number printed on the product.</li>
+
+                <li>• Upload a clear invoice image.</li>
+
+                <li>• Double-check the purchase date.</li>
+
+              </ul>
+
+            </div>
+
+            <div className="bg-green-50 rounded-xl p-5">
+
+              <h3 className="font-semibold text-green-700 mb-2">
+                Warranty Reminder
+              </h3>
+
+              <p className="text-gray-600 text-sm leading-6">
+
+                After adding a product, you can register its warranty
+                and receive notifications before the warranty expires.
+
+              </p>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </form>
+
     </div>
-  );
+
+  </div>
+
+);
+
 }

@@ -14,6 +14,7 @@ import org.example.digital_warranty.service.ServiceHistoryService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.example.digital_warranty.service.NotificationService;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class ServiceHistoryServiceImpl implements ServiceHistoryService {
     private final ServiceHistoryRepository serviceHistoryRepository;
     private final ProductRepository productRepository;
     private final CloudinaryService cloudinaryService;
+    private final NotificationService notificationService;
 
     @Override
     public ServiceHistoryResponse addService(
@@ -33,6 +35,7 @@ public class ServiceHistoryServiceImpl implements ServiceHistoryService {
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
+
         User currentUser = (User) SecurityContextHolder.getContext()
                 .getAuthentication()
                 .getPrincipal();
@@ -40,6 +43,7 @@ public class ServiceHistoryServiceImpl implements ServiceHistoryService {
         if (!product.getUser().getId().equals(currentUser.getId())) {
             throw new ResourceNotFoundException("Product not found");
         }
+
 
         String invoiceUrl = null;
 
@@ -61,6 +65,12 @@ public class ServiceHistoryServiceImpl implements ServiceHistoryService {
                 .build();
 
         service = serviceHistoryRepository.save(service);
+
+        notificationService.createNotification(
+                product.getUser(),
+                "Service Added",
+                "A service record has been added for " + product.getProductName() + "."
+        );
 
         return mapToResponse(service);
     }
@@ -91,6 +101,13 @@ public class ServiceHistoryServiceImpl implements ServiceHistoryService {
 
         ServiceHistory service = serviceHistoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Service record not found"));
+        User currentUser = (User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        if (!service.getProduct().getUser().getId().equals(currentUser.getId())) {
+            throw new ResourceNotFoundException("Service record not found");
+        }
 
         service.setServiceDate(request.getServiceDate());
         service.setServiceCenter(request.getServiceCenter());
@@ -113,6 +130,13 @@ public class ServiceHistoryServiceImpl implements ServiceHistoryService {
 
         service = serviceHistoryRepository.save(service);
 
+        notificationService.createNotification(
+                service.getProduct().getUser(),
+                "Service Updated",
+                "Service history has been updated for " +
+                        service.getProduct().getProductName() + "."
+        );
+
         return mapToResponse(service);
     }
 
@@ -121,6 +145,20 @@ public class ServiceHistoryServiceImpl implements ServiceHistoryService {
 
         ServiceHistory service = serviceHistoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Service record not found"));
+        User currentUser = (User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        if (!service.getProduct().getUser().getId().equals(currentUser.getId())) {
+            throw new ResourceNotFoundException("Service record not found");
+        }
+
+        notificationService.createNotification(
+                service.getProduct().getUser(),
+                "Service Deleted",
+                "Service history has been deleted for " +
+                        service.getProduct().getProductName() + "."
+        );
 
         serviceHistoryRepository.delete(service);
     }

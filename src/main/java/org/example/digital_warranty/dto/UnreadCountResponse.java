@@ -7,9 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class AuthResponse {
+public class UnreadCountResponse {
 
-    private String token;
-    private String message;
-    private UserResponse user;
+    private long count;
 }

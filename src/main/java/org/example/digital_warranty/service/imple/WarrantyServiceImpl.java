@@ -11,6 +11,7 @@ import org.example.digital_warranty.repository.ProductRepository;
 import org.example.digital_warranty.repository.WarrantyRepository;
 import org.example.digital_warranty.service.WarrantyService;
 import org.springframework.stereotype.Service;
+import org.example.digital_warranty.service.NotificationService;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class WarrantyServiceImpl implements WarrantyService {
 
     private final WarrantyRepository warrantyRepository;
     private final ProductRepository productRepository;
+    private final NotificationService notificationService;
 
     @Override
     public WarrantyResponse addWarranty(WarrantyRequest request,
@@ -41,6 +43,11 @@ public class WarrantyServiceImpl implements WarrantyService {
                 .build();
 
         warranty = warrantyRepository.save(warranty);
+        notificationService.createNotification(
+                product.getUser(),
+                "Warranty Added",
+                "Warranty has been added for " + product.getProductName() + "."
+        );
 
         return map(warranty);
     }
@@ -78,7 +85,16 @@ public class WarrantyServiceImpl implements WarrantyService {
         warranty.setProvider(request.getProvider());
         warranty.setTerms(request.getTerms());
 
-        return map(warrantyRepository.save(warranty));
+        Warranty updatedWarranty = warrantyRepository.save(warranty);
+
+        notificationService.createNotification(
+                updatedWarranty.getProduct().getUser(),
+                "Warranty Updated",
+                "Warranty has been updated for " +
+                        updatedWarranty.getProduct().getProductName() + "."
+        );
+
+        return map(updatedWarranty);
     }
 
     @Override
@@ -90,6 +106,13 @@ public class WarrantyServiceImpl implements WarrantyService {
 
         if (!warranty.getProduct().getUser().getEmail().equals(email))
             throw new UnauthorizedException("Unauthorized");
+
+        notificationService.createNotification(
+                warranty.getProduct().getUser(),
+                "Warranty Deleted",
+                "Warranty has been deleted for " +
+                        warranty.getProduct().getProductName() + "."
+        );
 
         warrantyRepository.delete(warranty);
     }

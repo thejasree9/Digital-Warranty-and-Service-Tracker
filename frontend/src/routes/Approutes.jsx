@@ -6,7 +6,7 @@ import Profile from "../pages/profile/Profile";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import ForgotPassword from "../pages/auth/ForgotPassword";
-
+import Notifications from "../pages/notifications/Notifications";
 import ProductList from "../pages/products/ProductList";
 import AddProduct from "../pages/products/AddProduct";
 import EditProduct from "../pages/products/EditProduct";
@@ -62,7 +62,12 @@ const AppRoutes = () => {
 <Route path="services/add" element={<AddService />} />
 <Route path="services/:id" element={<ServiceDetails />} />
 <Route path="services/edit/:id" element={<EditService />} />
+<Route
+    path="notifications"
+    element={<Notifications />}
+/>
       </Route>
+      
      
 
       {/* 404 */}

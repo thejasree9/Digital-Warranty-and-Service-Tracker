@@ -1,45 +1,31 @@
-const notifications = [
-  {
-    id: 1,
-    title: "Warranty Expiring Soon",
-    message: "Your HP Laptop warranty expires in 5 days.",
-    date: "2026-07-30",
-    type: "warning",
-    read: false,
-  },
-  {
-    id: 2,
-    title: "Warranty Expired",
-    message: "Samsung TV warranty has expired.",
-    date: "2026-07-18",
-    type: "danger",
-    read: true,
-  },
-  {
-    id: 3,
-    title: "Service Reminder",
-    message: "Car service is due next week.",
-    date: "2026-07-28",
-    type: "info",
-    read: false,
-  },
-];
+import api from "./api";
 
+// Get all notifications
 export const getNotifications = async () => {
-  return {
-    success: true,
-    data: notifications,
-  };
+  const response = await api.get("/api/notifications");
+  return response.data;
 };
 
+// Get unread count
+export const getUnreadCount = async () => {
+  const response = await api.get("/api/notifications/unread-count");
+  return response.data;
+};
+
+// Mark one notification as read
 export const markAsRead = async (id) => {
-  return {
-    success: true,
-  };
+  const response = await api.put(`/api/notifications/${id}/read`);
+  return response.data;
 };
 
+// Mark all notifications as read
+export const markAllAsRead = async () => {
+  const response = await api.put("/api/notifications/read-all");
+  return response.data;
+};
+
+// Delete notification
 export const deleteNotification = async (id) => {
-  return {
-    success: true,
-  };
+  const response = await api.delete(`/api/notifications/${id}`);
+  return response.data;
 };

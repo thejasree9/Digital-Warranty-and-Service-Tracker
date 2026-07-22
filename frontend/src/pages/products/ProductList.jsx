@@ -3,171 +3,714 @@ import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 import {
+  Eye,
+  Pencil,
+  Trash2,
+  Search,
+  RefreshCcw,
+  Plus,
+  Package,
+  Filter,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+
+import {
   getProducts,
   deleteProduct,
   searchProducts,
 } from "../../services/productService";
 
 export default function ProductList() {
+
   const navigate = useNavigate();
 
   const [products, setProducts] = useState([]);
-  const [search, setSearch] = useState("");
+
   const [loading, setLoading] = useState(true);
 
+  const [search, setSearch] = useState("");
+
+  const [page, setPage] = useState(0);
+
+  const [totalPages, setTotalPages] = useState(0);
+
+  const [categoryFilter, setCategoryFilter] = useState("");
+
+  const [sortBy, setSortBy] = useState("productName");
+
+  const [direction, setDirection] = useState("asc");
+
   useEffect(() => {
+
     loadProducts();
-  }, []);
+
+  }, [page]);
 
   const loadProducts = async () => {
+
     try {
-      const response = await getProducts();
 
-console.log("FULL RESPONSE");
-console.log(JSON.stringify(response, null, 2));
+      setLoading(true);
 
-setProducts(response.data.products);
-    } catch (err) {
-      console.error(err);
+      const response = await getProducts(
+        page,
+        5,
+        sortBy,
+        direction
+      );
+
+      console.log("Product Response");
+      console.log(response);
+
+      if (response.success) {
+
+        setProducts(response.data.products|| []);
+
+        setTotalPages(response.data.totalPages || 0);
+
+      } else {
+
+        toast.error("Unable to load products");
+
+      }
+
+    } catch (error) {
+
+      console.error(error);
+
       toast.error("Failed to load products");
+
     } finally {
+
       setLoading(false);
-    }
-  };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Delete this product?")) return;
-
-    try {
-      await deleteProduct(id);
-      toast.success("Product Deleted");
-      loadProducts();
-    } catch (err) {
-      console.error(err);
-      toast.error("Delete Failed");
     }
+
   };
 
   const handleSearch = async () => {
+
     if (search.trim() === "") {
+
       loadProducts();
+
       return;
+
     }
 
     try {
+
       const response = await searchProducts(search);
 
-      setProducts(response.data.products);
+      if (response.success) {
+
+        setProducts(response.data || []);
+
+      } else {
+
+        setProducts([]);
+
+      }
+
     } catch (error) {
+
       console.error(error);
-      toast.error("No Products Found");
+
+      toast.error("No matching products found");
+
     }
+
   };
-  console.log(products);
-console.log(Array.isArray(products));
 
+  const handleDelete = async (id) => {
+
+    if (!id) {
+
+      toast.error("Invalid Product");
+
+      return;
+
+    }
+
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this product?"
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+
+      await deleteProduct(id);
+
+      toast.success("Product deleted successfully");
+
+      loadProducts();
+
+    } catch (error) {
+
+      console.error(error);
+
+      toast.error("Delete failed");
+
+    }
+
+  };
+
+  const nextPage = () => {
+
+    if (page < totalPages - 1) {
+
+      setPage(page + 1);
+
+    }
+
+  };
+
+  const previousPage = () => {
+
+    if (page > 0) {
+
+      setPage(page - 1);
+
+    }
+
+  };
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-7xl mx-auto">
 
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Products</h1>
-        </div>
+<div className="min-h-screen bg-slate-100 p-8">
 
-        <div className="flex gap-3 mb-6">
-          <input
-            type="text"
-            placeholder="Search Product..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="border rounded-lg p-2 flex-1"
-          />
+<div className="max-w-7xl mx-auto">
 
-          <button
-            onClick={handleSearch}
-            className="bg-blue-600 text-white px-5 rounded-lg"
-          >
-            Search
-          </button>
+{/* Header */}
 
-          <button
-            onClick={loadProducts}
-            className="bg-gray-600 text-white px-5 rounded-lg"
-          >
-            Refresh
-          </button>
-        </div>
+<div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5 mb-8">
 
-        <div className="bg-white rounded-xl shadow overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-blue-600 text-white">
-              <tr>
-                <th className="p-3">Product</th>
-                <th className="p-3">Brand</th>
-                <th className="p-3">Model</th>
-                <th className="p-3">Price</th>
-                <th className="p-3">Purchase Date</th>
-                <th className="p-3">Actions</th>
-              </tr>
-            </thead>
+<div>
 
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan="6" className="text-center py-6">
-                    Loading...
-                  </td>
-                </tr>
-              ) : products.length === 0 ? (
-                <tr>
-                  <td colSpan="6" className="text-center py-6">
-                    No Products Found
-                  </td>
-                </tr>
-              ) : (
-                products.map((product) => (
-                  <tr
-                    key={product.id}
-                    className="border-b hover:bg-gray-50"
-                  >
-                    <td className="p-3">{product.productName}</td>
-                    <td className="p-3">{product.brand}</td>
-                    <td className="p-3">{product.model}</td>
-                    <td className="p-3">₹{product.price}</td>
-                    <td className="p-3">{product.purchaseDate}</td>
+<h1 className="text-3xl font-bold text-slate-800">
+Products
+</h1>
 
-                    <td className="p-3 flex gap-2">
-                      <button
-                        onClick={() => navigate(`/products/${product.id}`)}
-                        className="bg-green-500 text-white px-3 py-1 rounded"
-                      >
-                        View
-                      </button>
+<p className="text-slate-500 mt-2">
+Manage all your registered products in one place.
+</p>
 
-                      <button
-                        onClick={() =>
-                          navigate(`/products/edit/${product.id}`)
-                        }
-                        className="bg-yellow-500 text-white px-3 py-1 rounded"
-                      >
-                        Edit
-                      </button>
+</div>
 
-                      <button
-                        onClick={() => handleDelete(product.id)}
-                        className="bg-red-600 text-white px-3 py-1 rounded"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
+<button
+onClick={() => navigate("/products/add")}
+className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl shadow-md transition"
+>
 
+<Plus size={20} />
+
+Add Product
+
+</button>
+
+</div>
+
+{/* Search Card */}
+
+<div className="bg-white rounded-2xl shadow-md p-6 mb-8">
+
+<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+{/* Search */}
+
+<div className="relative md:col-span-2">
+
+<Search
+size={18}
+className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+/>
+
+<input
+type="text"
+placeholder="Search by Product Name..."
+value={search}
+onChange={(e)=>setSearch(e.target.value)}
+onKeyDown={(e)=>{
+if(e.key==="Enter"){
+handleSearch();
+}
+}}
+className="w-full border rounded-xl pl-11 pr-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+/>
+
+</div>
+
+{/* Category */}
+
+<select
+
+value={categoryFilter}
+
+onChange={(e)=>setCategoryFilter(e.target.value)}
+
+className="border rounded-xl px-4 py-3"
+
+>
+
+<option value="">
+All Categories
+</option>
+
+<option>
+Laptop
+</option>
+
+<option>
+Mobile
+</option>
+
+<option>
+TV
+</option>
+
+<option>
+Refrigerator
+</option>
+
+<option>
+Air Conditioner
+</option>
+
+<option>
+Printer
+</option>
+
+<option>
+Washing Machine
+</option>
+
+<option>
+Other
+</option>
+
+</select>
+
+{/* Buttons */}
+
+<div className="flex gap-3">
+
+<button
+
+onClick={handleSearch}
+
+className="flex-1 flex justify-center items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl"
+
+>
+
+<Search size={18}/>
+
+Search
+
+</button>
+
+<button
+
+onClick={loadProducts}
+
+className="flex justify-center items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white px-5 rounded-xl"
+
+>
+
+<RefreshCcw size={18}/>
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+{/* Product Table */}
+
+<div className="bg-white rounded-2xl shadow-md overflow-hidden">
+
+<table className="w-full">
+
+<thead className="bg-blue-600 text-white">
+
+<tr>
+
+<th className="text-left p-4">
+Product
+</th>
+
+<th className="text-left p-4">
+Brand
+</th>
+
+<th className="text-left p-4">
+Model
+</th>
+
+<th className="text-left p-4">
+Price
+</th>
+
+<th className="text-left p-4">
+Purchase Date
+</th>
+
+<th className="text-center p-4">
+Actions
+</th>
+
+</tr>
+
+</thead>
+<tbody>
+
+{loading ? (
+
+<tr>
+
+<td
+colSpan="6"
+className="py-16 text-center"
+>
+
+<div className="flex flex-col items-center">
+
+<div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+
+<p className="mt-4 text-gray-500">
+Loading Products...
+</p>
+
+</div>
+
+</td>
+
+</tr>
+
+) : products.length === 0 ? (
+
+<tr>
+
+<td
+colSpan="6"
+className="py-16"
+>
+
+<div className="flex flex-col items-center">
+
+<Package
+size={70}
+className="text-gray-300"
+/>
+
+<h2 className="mt-5 text-2xl font-semibold text-gray-700">
+
+No Products Found
+
+</h2>
+
+<p className="mt-2 text-gray-500">
+
+There are no registered products.
+
+</p>
+
+<button
+
+onClick={() => navigate("/products/add")}
+
+className="mt-6 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl"
+
+>
+
+<Plus size={18}/>
+
+Add Product
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+) : (
+
+products.map((product) => (
+
+<tr
+key={product.id}
+className="border-b hover:bg-blue-50 transition"
+>
+
+{/* Product */}
+
+<td className="p-4">
+
+<div className="flex items-center gap-4">
+
+<img
+
+src={
+product.invoiceUrl ||
+"https://placehold.co/70x70?text=📦"
+}
+
+alt={product.productName}
+
+className="w-14 h-14 rounded-xl object-cover border"
+
+/>
+
+<div>
+
+<h3 className="font-semibold text-slate-800">
+
+{product.productName}
+
+</h3>
+
+<p className="text-sm text-gray-500">
+
+Serial :
+
+{product.serialNumber || "N/A"}
+
+</p>
+
+</div>
+
+</div>
+
+</td>
+
+{/* Brand */}
+
+<td className="p-4">
+
+{product.brand}
+
+</td>
+
+{/* Model */}
+
+<td className="p-4">
+
+{product.model}
+
+</td>
+
+{/* Price */}
+
+<td className="p-4">
+
+<span className="font-semibold text-green-600">
+
+₹ {product.price}
+
+</span>
+
+</td>
+
+{/* Purchase Date */}
+
+<td className="p-4">
+
+{product.purchaseDate}
+
+</td>
+
+{/* Actions */}
+
+<td className="p-4">
+
+<div className="flex justify-center gap-3">
+
+<button
+
+title="View Product"
+
+onClick={() => {
+
+if(product.id){
+
+navigate(`/products/${product.id}`);
+
+}else{
+
+toast.error("Invalid Product");
+
+}
+
+}}
+
+className="p-2 rounded-lg bg-green-100 hover:bg-green-200 transition"
+
+>
+
+<Eye
+size={18}
+className="text-green-700"
+/>
+
+</button>
+
+<button
+
+title="Edit Product"
+
+onClick={() => {
+
+if(product.id){
+
+navigate(`/products/edit/${product.id}`);
+
+}else{
+
+toast.error("Invalid Product");
+
+}
+
+}}
+
+className="p-2 rounded-lg bg-yellow-100 hover:bg-yellow-200 transition"
+
+>
+
+<Pencil
+size={18}
+className="text-yellow-700"
+/>
+
+</button>
+
+<button
+
+title="Delete Product"
+
+onClick={() => handleDelete(product.id)}
+
+className="p-2 rounded-lg bg-red-100 hover:bg-red-200 transition"
+
+>
+
+<Trash2
+size={18}
+className="text-red-700"
+/>
+
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+))
+
+)}
+
+</tbody>
           </table>
+
         </div>
+
+        {/* Footer */}
+
+        {!loading && (
+
+          <div className="flex flex-col md:flex-row justify-between items-center bg-white rounded-2xl shadow-md mt-6 p-5">
+
+            {/* Product Count */}
+
+            <p className="text-gray-600">
+
+              Showing
+
+              <span className="font-semibold text-blue-600">
+                {" "}
+                {products.length}
+                {" "}
+              </span>
+
+              product{products.length !== 1 ? "s" : ""}
+
+            </p>
+
+            {/* Pagination */}
+
+            <div className="flex items-center gap-3 mt-4 md:mt-0">
+
+              <button
+
+                onClick={previousPage}
+
+                disabled={page === 0}
+
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl transition
+
+                  ${page === 0
+
+                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+
+                    : "bg-gray-700 hover:bg-gray-800 text-white"
+
+                  }`}
+
+              >
+
+                <ChevronLeft size={18} />
+
+                Previous
+
+              </button>
+
+              <div className="px-5 py-2 rounded-xl bg-blue-50 text-blue-700 font-semibold">
+
+                Page {page + 1}
+
+                {totalPages > 0 && ` of ${totalPages}`}
+
+              </div>
+
+              <button
+
+                onClick={nextPage}
+
+                disabled={page >= totalPages - 1}
+
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl transition
+
+                  ${page >= totalPages - 1
+
+                    ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+
+                    : "bg-blue-600 hover:bg-blue-700 text-white"
+
+                  }`}
+
+              >
+
+                Next
+
+                <ChevronRight size={18} />
+
+              </button>
+
+            </div>
+
+          </div>
+
+        )}
+
       </div>
+
     </div>
+
   );
+
 }

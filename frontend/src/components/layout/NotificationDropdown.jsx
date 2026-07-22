@@ -13,13 +13,14 @@ const NotificationDropdown = ({ onClose, setUnreadCount }) => {
   }, []);
 
   const loadNotifications = async () => {
-    try {
-      const data = await getNotifications();
-      setNotifications(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  try {
+    const data = await getNotifications();
+    console.log("Notifications API:", data);
+    setNotifications(data);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   const handleNotificationClick = async (notificationId) => {
     try {

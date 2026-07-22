@@ -18,6 +18,7 @@ export default function ProductDetails({ productId }) {
     }
   };
 
+
   if (!product) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -25,6 +26,11 @@ export default function ProductDetails({ productId }) {
       </div>
     );
   }
+const { id } = useParams();
+
+useEffect(() => {
+    loadProduct();
+}, []);
 
   return (
     <div className="min-h-screen bg-gray-100 flex justify-center p-10">

@@ -8,10 +8,24 @@ const WelcomeBanner = () => {
     year: "numeric",
   });
 
+  const userData = localStorage.getItem("user");
+
+let user = null;
+
+if (userData && userData !== "undefined") {
+  try {
+    user = JSON.parse(userData);
+  } catch (e) {
+    console.error("Invalid user in localStorage", e);
+    localStorage.removeItem("user");
+  }
+}
+
+const userName = user?.name || "User";
   return (
     <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl text-white p-8 shadow-lg">
       <h1 className="text-3xl font-bold">
-        Welcome back, Sneha 👋
+        Welcome back, {userName} 👋
       </h1>
 
       <p className="mt-2 text-blue-100">

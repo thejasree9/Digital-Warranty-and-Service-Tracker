@@ -5,11 +5,32 @@ import {
   Sun,
   UserCircle,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useAuth } from "../../context/AuthContext";
+import ProfileDropdown from "./ProfileDropdown"; // Adjust the path if needed
 
 const Navbar = () => {
   const [darkMode, setDarkMode] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const profileRef = useRef(null);
+  const { user } = useAuth();
+  useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (
+      profileRef.current &&
+      !profileRef.current.contains(event.target)
+    ) {
+      setShowProfileMenu(false);
+    }
+  };
 
+  document.addEventListener("mousedown", handleClickOutside);
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
+  
   return (
     <header className="bg-white shadow-sm border-b px-6 py-4 flex items-center justify-between">
 
@@ -50,28 +71,36 @@ const Navbar = () => {
           {darkMode ? <Sun size={22} /> : <Moon size={22} />}
         </button>
 
-        {/* User */}
+       {/* User */}
 
-        <button className="flex items-center gap-3 hover:bg-gray-100 rounded-xl px-3 py-2 transition">
+<div className="relative" ref={profileRef}>
+  <button
+    onClick={() => setShowProfileMenu(!showProfileMenu)}
+    className="flex items-center gap-3 hover:bg-gray-100 rounded-xl px-3 py-2 transition"
+  >
+    <UserCircle
+      size={40}
+      className="text-blue-600"
+    />
 
-          <UserCircle
-            size={40}
-            className="text-blue-600"
-          />
+    <div className="hidden md:block text-left">
+      <h3 className="font-semibold text-slate-800">
+        {user?.name || "User"}
+      </h3>
 
-          <div className="hidden md:block text-left">
+      <p className="text-xs text-gray-500">
+        {user?.role || "USER"}
+      </p>
+    </div>
+  </button>
 
-            <h3 className="font-semibold text-slate-800">
-              Sneha
-            </h3>
-
-            <p className="text-xs text-gray-500">
-              Administrator
-            </p>
-
-          </div>
-
-        </button>
+  {showProfileMenu && (
+    <ProfileDropdown
+  user={user}
+  onClose={() => setShowProfileMenu(false)}
+/>
+  )}
+</div>
 
       </div>
 

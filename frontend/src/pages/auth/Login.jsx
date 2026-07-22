@@ -22,19 +22,18 @@ export default function Login() {
   } = useForm();
 
   const onSubmit = async (data) => {
+    console.log("Login button clicked");
     try {
       setLoading(true);
 
       const response = await loginUser(data);
 
-      login({
-        token: response.data.token,
-        user: response.data.user,
-      });
+console.log(response);
 
-      toast.success("Login Successful");
-
-      console.log(response.data);
+login({
+  token: response.data.token,
+  user: response.data.user,
+});
 
       navigate("/dashboard");
     } catch (error) {

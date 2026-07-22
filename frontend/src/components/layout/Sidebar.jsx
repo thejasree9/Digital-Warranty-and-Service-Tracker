@@ -11,9 +11,19 @@ import {
   LogOut,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
-
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 const Sidebar = () => {
   const { logout } = useAuth();
+  const navigate = useNavigate();
+
+const handleLogout = () => {
+  logout();
+
+  toast.success("Logged out successfully");
+
+  navigate("/login");
+};
   const [collapsed, setCollapsed] = useState(false);
 
   const menuItems = [
@@ -114,7 +124,7 @@ const Sidebar = () => {
       {/* Logout */}
       <div className="p-4 border-t border-gray-200 dark:border-slate-700">
         <button
-          onClick={logout}
+  onClick={handleLogout}
           className={`w-full flex items-center ${
             collapsed ? "justify-center" : "justify-center gap-3"
           } px-4 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white transition-all duration-300`}

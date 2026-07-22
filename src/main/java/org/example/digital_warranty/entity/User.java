@@ -37,7 +37,11 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role;
+    @Column(name = "phone")
+    private String phone;
 
+    @Column(name = "profile_image")
+    private String profileImage;
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     @PrePersist

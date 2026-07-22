@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { ArrowLeft, Save } from "lucide-react";
 
-import { getProducts } from "../../services/productService";
-import { addWarranty } from "../../services/warrantyService";
+import {
+  getWarranty,
+  updateWarranty,
+} from "../../services/warrantyService";
 
-export default function AddWarranty() {
+export default function EditWarranty() {
+
+  const { productId } = useParams();
 
   const navigate = useNavigate();
-
-  const [products, setProducts] = useState([]);
 
   const [loading, setLoading] = useState(false);
 
@@ -32,23 +34,23 @@ export default function AddWarranty() {
 
   useEffect(() => {
 
-    loadProducts();
+    loadWarranty();
 
-  }, []);
+  }, [productId]);
 
-  const loadProducts = async () => {
+  const loadWarranty = async () => {
 
     try {
 
-      const response = await getProducts();
+      const response = await getWarranty(productId);
 
-      setProducts(response.data.products || []);
+      setFormData(response.data);
 
     } catch (error) {
 
       console.error(error);
 
-      toast.error("Unable to load products");
+      toast.error("Unable to load warranty");
 
     }
 
@@ -69,13 +71,8 @@ export default function AddWarranty() {
 
     e.preventDefault();
 
-    if (!formData.productId) {
-      toast.error("Please select a product");
-      return;
-    }
-
     if (!formData.provider.trim()) {
-      toast.error("Provider is required");
+      toast.error("Warranty provider is required");
       return;
     }
 
@@ -98,9 +95,9 @@ export default function AddWarranty() {
 
       setLoading(true);
 
-      await addWarranty(formData);
+      await updateWarranty(productId, formData);
 
-      toast.success("Warranty added successfully");
+      toast.success("Warranty updated successfully");
 
       navigate("/warranty");
 
@@ -108,7 +105,7 @@ export default function AddWarranty() {
 
       console.error(error);
 
-      toast.error("Failed to add warranty");
+      toast.error("Failed to update warranty");
 
     } finally {
 
@@ -130,13 +127,13 @@ export default function AddWarranty() {
 
             <h1 className="text-3xl font-bold">
 
-              Add Warranty
+              Edit Warranty
 
             </h1>
 
             <p className="text-gray-500 mt-2">
 
-              Register a warranty for your product.
+              Update warranty information.
 
             </p>
 
@@ -162,43 +159,22 @@ export default function AddWarranty() {
           onSubmit={handleSubmit}
           className="space-y-6"
         >
-                    {/* Product */}
+                  {/* Product Name (Read Only) */}
 
           <div>
 
             <label className="block mb-2 font-semibold">
 
-              Select Product
+              Product ID
 
             </label>
 
-            <select
-              name="productId"
+            <input
+              type="text"
               value={formData.productId}
-              onChange={handleChange}
-              className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
-            >
-
-              <option value="">
-
-                Select Product
-
-              </option>
-
-              {products.map((product) => (
-
-                <option
-                  key={product.id}
-                  value={product.id}
-                >
-
-                  {product.productName}
-
-                </option>
-
-              ))}
-
-            </select>
+              readOnly
+              className="w-full border rounded-xl p-3 bg-gray-100 cursor-not-allowed"
+            />
 
           </div>
 
@@ -240,34 +216,20 @@ export default function AddWarranty() {
               className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
             >
 
-              <option value="">
-
-                Select Warranty Type
-
-              </option>
-
               <option value="Manufacturer">
-
                 Manufacturer
-
               </option>
 
               <option value="Extended">
-
                 Extended
-
               </option>
 
               <option value="Accidental Damage">
-
                 Accidental Damage
-
               </option>
 
               <option value="Premium">
-
                 Premium
-
               </option>
 
             </select>
@@ -355,7 +317,7 @@ export default function AddWarranty() {
             >
               <Save size={18} />
 
-              {loading ? "Saving..." : "Save Warranty"}
+              {loading ? "Updating..." : "Update Warranty"}
 
             </button>
 

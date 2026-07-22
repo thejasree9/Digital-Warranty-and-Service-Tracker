@@ -7,8 +7,11 @@ import org.example.digital_warranty.dto.ServiceHistoryResponse;
 import org.example.digital_warranty.dto.response.ApiResponse;
 import org.example.digital_warranty.service.ServiceHistoryService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,12 +22,21 @@ public class ServiceHistoryController {
 
     private final ServiceHistoryService serviceHistoryService;
 
-    @PostMapping
+    // Add Service with Invoice Upload
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<ServiceHistoryResponse>> addService(
-            @Valid @RequestBody ServiceHistoryRequest request) {
+
+            @RequestPart("service")
+            @Valid ServiceHistoryRequest request,
+
+            @RequestPart(value = "file", required = false)
+            MultipartFile file) {
 
         ServiceHistoryResponse response =
-                serviceHistoryService.addService(request);
+                serviceHistoryService.addService(
+                        request,
+                        file
+                );
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(
@@ -36,6 +48,7 @@ public class ServiceHistoryController {
                 );
     }
 
+    // Get Single Service
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<ServiceHistoryResponse>> getService(
             @PathVariable Long id) {
@@ -52,6 +65,26 @@ public class ServiceHistoryController {
         );
     }
 
+    // Get All Services
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<ServiceHistoryResponse>>> getAllServices(
+            Authentication authentication) {
+
+        List<ServiceHistoryResponse> response =
+                serviceHistoryService.getAllServices(
+                        authentication.getName()
+                );
+
+        return ResponseEntity.ok(
+                ApiResponse.<List<ServiceHistoryResponse>>builder()
+                        .success(true)
+                        .message("Service history fetched successfully")
+                        .data(response)
+                        .build()
+        );
+    }
+
+    // Get Services By Product
     @GetMapping("/product/{productId}")
     public ResponseEntity<ApiResponse<List<ServiceHistoryResponse>>> getServicesByProduct(
             @PathVariable Long productId) {
@@ -68,13 +101,27 @@ public class ServiceHistoryController {
         );
     }
 
-    @PutMapping("/{id}")
+    // Update Service with Invoice Upload
+    @PutMapping(
+            value = "/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
     public ResponseEntity<ApiResponse<ServiceHistoryResponse>> updateService(
+
             @PathVariable Long id,
-            @Valid @RequestBody ServiceHistoryRequest request) {
+
+            @RequestPart("service")
+            @Valid ServiceHistoryRequest request,
+
+            @RequestPart(value = "file", required = false)
+            MultipartFile file) {
 
         ServiceHistoryResponse response =
-                serviceHistoryService.updateService(id, request);
+                serviceHistoryService.updateService(
+                        id,
+                        request,
+                        file
+                );
 
         return ResponseEntity.ok(
                 ApiResponse.<ServiceHistoryResponse>builder()
@@ -85,6 +132,7 @@ public class ServiceHistoryController {
         );
     }
 
+    // Delete Service
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<String>> deleteService(
             @PathVariable Long id) {

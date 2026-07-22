@@ -1,54 +1,59 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { ArrowLeft, Save } from "lucide-react";
 
-import { getProducts } from "../../services/productService";
-import { addWarranty } from "../../services/warrantyService";
+import {
+  getService,
+  updateService,
+} from "../../services/serviceHistoryService";
 
-export default function AddWarranty() {
+export default function EditService() {
+
+  const { id } = useParams();
 
   const navigate = useNavigate();
 
-  const [products, setProducts] = useState([]);
-
   const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState(null);
 
   const [formData, setFormData] = useState({
 
     productId: "",
 
-    provider: "",
+    serviceDate: "",
 
-    warrantyType: "",
+    serviceCenter: "",
 
-    startDate: "",
+    description: "",
 
-    endDate: "",
+    cost: "",
 
-    terms: "",
+    technicianName: "",
+
+    notes: "",
 
   });
 
   useEffect(() => {
 
-    loadProducts();
+    loadService();
 
-  }, []);
+  }, [id]);
 
-  const loadProducts = async () => {
+  const loadService = async () => {
 
     try {
 
-      const response = await getProducts();
+      const response = await getService(id);
 
-      setProducts(response.data.products || []);
+      setFormData(response.data);
 
     } catch (error) {
 
       console.error(error);
 
-      toast.error("Unable to load products");
+      toast.error("Unable to load service");
 
     }
 
@@ -69,28 +74,18 @@ export default function AddWarranty() {
 
     e.preventDefault();
 
-    if (!formData.productId) {
-      toast.error("Please select a product");
+    if (!formData.serviceDate) {
+      toast.error("Service date is required");
       return;
     }
 
-    if (!formData.provider.trim()) {
-      toast.error("Provider is required");
+    if (!formData.serviceCenter.trim()) {
+      toast.error("Service center is required");
       return;
     }
 
-    if (!formData.warrantyType.trim()) {
-      toast.error("Warranty type is required");
-      return;
-    }
-
-    if (!formData.startDate) {
-      toast.error("Start date is required");
-      return;
-    }
-
-    if (!formData.endDate) {
-      toast.error("End date is required");
+    if (!formData.description.trim()) {
+      toast.error("Description is required");
       return;
     }
 
@@ -98,17 +93,23 @@ export default function AddWarranty() {
 
       setLoading(true);
 
-      await addWarranty(formData);
+      await updateService(
+  id,
+  {
+    ...formData,
+    cost: Number(formData.cost),
+  },
+  file
+);
+      toast.success("Service updated successfully");
 
-      toast.success("Warranty added successfully");
-
-      navigate("/warranty");
+      navigate("/services");
 
     } catch (error) {
 
       console.error(error);
 
-      toast.error("Failed to add warranty");
+      toast.error("Failed to update service");
 
     } finally {
 
@@ -124,19 +125,21 @@ export default function AddWarranty() {
 
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-md p-8">
 
+        {/* Header */}
+
         <div className="flex items-center justify-between mb-8">
 
           <div>
 
             <h1 className="text-3xl font-bold">
 
-              Add Warranty
+              Edit Service History
 
             </h1>
 
             <p className="text-gray-500 mt-2">
 
-              Register a warranty for your product.
+              Update the service history details.
 
             </p>
 
@@ -144,7 +147,7 @@ export default function AddWarranty() {
 
           <button
 
-            onClick={() => navigate("/warranty")}
+            onClick={() => navigate("/services")}
 
             className="flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-xl"
 
@@ -162,119 +165,88 @@ export default function AddWarranty() {
           onSubmit={handleSubmit}
           className="space-y-6"
         >
-                    {/* Product */}
+                  {/* Product ID (Read Only) */}
 
           <div>
 
             <label className="block mb-2 font-semibold">
 
-              Select Product
-
-            </label>
-
-            <select
-              name="productId"
-              value={formData.productId}
-              onChange={handleChange}
-              className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
-            >
-
-              <option value="">
-
-                Select Product
-
-              </option>
-
-              {products.map((product) => (
-
-                <option
-                  key={product.id}
-                  value={product.id}
-                >
-
-                  {product.productName}
-
-                </option>
-
-              ))}
-
-            </select>
-
-          </div>
-
-          {/* Provider */}
-
-          <div>
-
-            <label className="block mb-2 font-semibold">
-
-              Warranty Provider
+              Product ID
 
             </label>
 
             <input
               type="text"
-              name="provider"
-              value={formData.provider}
-              onChange={handleChange}
-              placeholder="Dell, HP, Samsung..."
-              className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
+              value={formData.productId}
+              readOnly
+              className="w-full border rounded-xl p-3 bg-gray-100 cursor-not-allowed"
             />
 
           </div>
 
-          {/* Warranty Type */}
+          {/* Service Date */}
 
           <div>
 
             <label className="block mb-2 font-semibold">
 
-              Warranty Type
+              Service Date
 
             </label>
 
-            <select
-              name="warrantyType"
-              value={formData.warrantyType}
+            <input
+              type="date"
+              name="serviceDate"
+              value={formData.serviceDate}
               onChange={handleChange}
               className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
-            >
-
-              <option value="">
-
-                Select Warranty Type
-
-              </option>
-
-              <option value="Manufacturer">
-
-                Manufacturer
-
-              </option>
-
-              <option value="Extended">
-
-                Extended
-
-              </option>
-
-              <option value="Accidental Damage">
-
-                Accidental Damage
-
-              </option>
-
-              <option value="Premium">
-
-                Premium
-
-              </option>
-
-            </select>
+            />
 
           </div>
 
-          {/* Dates */}
+          {/* Service Center */}
+
+          <div>
+
+            <label className="block mb-2 font-semibold">
+
+              Service Center
+
+            </label>
+
+            <input
+              type="text"
+              name="serviceCenter"
+              value={formData.serviceCenter}
+              onChange={handleChange}
+              placeholder="Dell Service Center"
+              className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+          </div>
+
+          {/* Description */}
+
+          <div>
+
+            <label className="block mb-2 font-semibold">
+
+              Service Description
+
+            </label>
+
+            <input
+              type="text"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Screen replacement, Battery replacement..."
+              className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+          </div>
+
+          {/* Cost & Technician */}
 
           <div className="grid md:grid-cols-2 gap-6">
 
@@ -282,15 +254,16 @@ export default function AddWarranty() {
 
               <label className="block mb-2 font-semibold">
 
-                Start Date
+                Service Cost
 
               </label>
 
               <input
-                type="date"
-                name="startDate"
-                value={formData.startDate}
+                type="number"
+                name="cost"
+                value={formData.cost}
                 onChange={handleChange}
+                placeholder="1000"
                 className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
               />
 
@@ -300,15 +273,16 @@ export default function AddWarranty() {
 
               <label className="block mb-2 font-semibold">
 
-                End Date
+                Technician Name
 
               </label>
 
               <input
-                type="date"
-                name="endDate"
-                value={formData.endDate}
+                type="text"
+                name="technicianName"
+                value={formData.technicianName}
                 onChange={handleChange}
+                placeholder="John Doe"
                 className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
               />
 
@@ -316,22 +290,52 @@ export default function AddWarranty() {
 
           </div>
 
-          {/* Terms */}
+          {/* Upload New Invoice */}
+
+<div>
+
+  <label className="block mb-2 font-semibold">
+
+    Upload New Invoice (Optional)
+
+  </label>
+
+  <input
+    type="file"
+    accept=".pdf,.jpg,.jpeg,.png"
+    onChange={(e) => setFile(e.target.files[0])}
+    className="w-full border rounded-xl p-3"
+  />
+
+  {formData.invoiceUrl && (
+    <a
+      href={formData.invoiceUrl}
+      target="_blank"
+      rel="noreferrer"
+      className="text-blue-600 underline mt-2 inline-block"
+    >
+      View Current Invoice
+    </a>
+  )}
+
+</div>
+
+          {/* Notes */}
 
           <div>
 
             <label className="block mb-2 font-semibold">
 
-              Terms & Conditions
+              Notes
 
             </label>
 
             <textarea
               rows="5"
-              name="terms"
-              value={formData.terms}
+              name="notes"
+              value={formData.notes}
               onChange={handleChange}
-              placeholder="Enter warranty terms..."
+              placeholder="Enter additional notes..."
               className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             />
 
@@ -342,7 +346,7 @@ export default function AddWarranty() {
 
             <button
               type="button"
-              onClick={() => navigate("/warranty")}
+              onClick={() => navigate("/services")}
               className="px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-100 transition"
             >
               Cancel
@@ -355,7 +359,7 @@ export default function AddWarranty() {
             >
               <Save size={18} />
 
-              {loading ? "Saving..." : "Save Warranty"}
+              {loading ? "Updating..." : "Update Service"}
 
             </button>
 

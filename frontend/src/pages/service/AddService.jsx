@@ -1,125 +1,390 @@
-import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import { ArrowLeft, Save } from "lucide-react";
+
+import { getProducts } from "../../services/productService";
 import { addService } from "../../services/serviceHistoryService";
 
 export default function AddService() {
 
-    const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors }
-    } = useForm();
+  const [products, setProducts] = useState([]);
 
-    const onSubmit = async (data) => {
+  const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState(null);
 
-        try {
+  const [formData, setFormData] = useState({
 
-            setLoading(true);
+    productId: "",
 
-            await addService(data);
+    serviceDate: "",
 
-            toast.success("Service Added Successfully");
+    serviceCenter: "",
 
-            reset();
+    description: "",
 
-        } catch (error) {
+    cost: "",
 
-            toast.error(
-                error.response?.data?.message || "Unable to add service"
-            );
+    technicianName: "",
 
-        } finally {
+    notes: "",
 
-            setLoading(false);
+  });
 
-        }
+  useEffect(() => {
 
-    };
+    loadProducts();
 
-    return (
+  }, []);
 
-        <div className="min-h-screen bg-gray-100 flex justify-center py-10">
+  const loadProducts = async () => {
 
-            <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-4xl">
+    try {
 
-                <h1 className="text-3xl font-bold mb-8">
-                    Add Service History
-                </h1>
+      const response = await getProducts();
 
-                <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="grid grid-cols-2 gap-5"
-                >
+      setProducts(response.data.products || []);
 
-                    <input
-                        type="number"
-                        placeholder="Product ID"
-                        {...register("productId", { required: true })}
-                        className="border p-3 rounded"
-                    />
+    } catch (error) {
 
-                    <input
-                        type="date"
-                        {...register("serviceDate", { required: true })}
-                        className="border p-3 rounded"
-                    />
+      console.error(error);
 
-                    <input
-                        placeholder="Service Center"
-                        {...register("serviceCenter", { required: true })}
-                        className="border p-3 rounded"
-                    />
+      toast.error("Unable to load products");
 
-                    <input
-                        placeholder="Technician Name"
-                        {...register("technicianName")}
-                        className="border p-3 rounded"
-                    />
+    }
 
-                    <input
-                        type="number"
-                        step="0.01"
-                        placeholder="Cost"
-                        {...register("cost", { required: true })}
-                        className="border p-3 rounded"
-                    />
+  };
 
-                    <input
-                        placeholder="Invoice URL"
-                        {...register("invoiceUrl")}
-                        className="border p-3 rounded"
-                    />
+  const handleChange = (e) => {
 
-                    <textarea
-                        rows="4"
-                        placeholder="Description"
-                        {...register("description", { required: true })}
-                        className="border p-3 rounded col-span-2"
-                    />
+    setFormData({
 
-                    <textarea
-                        rows="3"
-                        placeholder="Notes"
-                        {...register("notes")}
-                        className="border p-3 rounded col-span-2"
-                    />
+      ...formData,
 
-                    <button
-                        className="bg-blue-600 text-white py-3 rounded-lg col-span-2"
-                    >
-                        {loading ? "Saving..." : "Add Service"}
-                    </button>
+      [e.target.name]: e.target.value,
 
-                </form>
+    });
 
-            </div>
+  };
+    const handleSubmit = async (e) => {
+
+    e.preventDefault();
+
+    if (!formData.productId) {
+      toast.error("Please select a product");
+      return;
+    }
+
+    if (!formData.serviceDate) {
+      toast.error("Service date is required");
+      return;
+    }
+
+    if (!formData.serviceCenter.trim()) {
+      toast.error("Service center is required");
+      return;
+    }
+
+    if (!formData.description.trim()) {
+      toast.error("Description is required");
+      return;
+    }
+
+    try {
+
+      setLoading(true);
+
+     await addService(
+  {
+    ...formData,
+    cost: Number(formData.cost),
+  },
+  file
+);
+      toast.success("Service history added successfully");
+
+      navigate("/services");
+
+    } catch (error) {
+
+      console.error(error);
+
+      toast.error("Failed to add service");
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+  };
+
+  return (
+
+    <div className="min-h-screen bg-gray-100 p-8">
+
+      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-md p-8">
+
+        {/* Header */}
+
+        <div className="flex items-center justify-between mb-8">
+
+          <div>
+
+            <h1 className="text-3xl font-bold">
+
+              Add Service History
+
+            </h1>
+
+            <p className="text-gray-500 mt-2">
+
+              Record a maintenance or repair for your product.
+
+            </p>
+
+          </div>
+
+          <button
+
+            onClick={() => navigate("/services")}
+
+            className="flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-xl"
+
+          >
+
+            <ArrowLeft size={18} />
+
+            Back
+
+          </button>
 
         </div>
 
-    );
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-6"
+        >
+                  {/* Product */}
+
+          <div>
+
+            <label className="block mb-2 font-semibold">
+
+              Select Product
+
+            </label>
+
+            <select
+              name="productId"
+              value={formData.productId}
+              onChange={handleChange}
+              className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
+            >
+
+              <option value="">
+
+                Select Product
+
+              </option>
+
+              {products.map((product) => (
+
+                <option
+                  key={product.id}
+                  value={product.id}
+                >
+
+                  {product.productName}
+
+                </option>
+
+              ))}
+
+            </select>
+
+          </div>
+
+          {/* Service Date */}
+
+          <div>
+
+            <label className="block mb-2 font-semibold">
+
+              Service Date
+
+            </label>
+
+            <input
+              type="date"
+              name="serviceDate"
+              value={formData.serviceDate}
+              onChange={handleChange}
+              className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+          </div>
+
+          {/* Service Center */}
+
+          <div>
+
+            <label className="block mb-2 font-semibold">
+
+              Service Center
+
+            </label>
+
+            <input
+              type="text"
+              name="serviceCenter"
+              value={formData.serviceCenter}
+              onChange={handleChange}
+              placeholder="Dell Service Center"
+              className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+          </div>
+
+          {/* Description */}
+
+          <div>
+
+            <label className="block mb-2 font-semibold">
+
+              Service Description
+
+            </label>
+
+            <input
+              type="text"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              placeholder="Screen replacement, Battery replacement..."
+              className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+          </div>
+
+          {/* Cost & Technician */}
+
+          <div className="grid md:grid-cols-2 gap-6">
+
+            <div>
+
+              <label className="block mb-2 font-semibold">
+
+                Service Cost
+
+              </label>
+
+              <input
+                type="number"
+                name="cost"
+                value={formData.cost}
+                onChange={handleChange}
+                placeholder="1000"
+                className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
+              />
+
+            </div>
+
+            <div>
+
+              <label className="block mb-2 font-semibold">
+
+                Technician Name
+
+              </label>
+
+              <input
+                type="text"
+                name="technicianName"
+                value={formData.technicianName}
+                onChange={handleChange}
+                placeholder="John Doe"
+                className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
+              />
+
+            </div>
+
+          </div>
+
+        
+
+          {/* Upload Invoice */}
+
+<div>
+
+  <label className="block mb-2 font-semibold">
+
+    Upload Invoice (PDF/Image)
+
+  </label>
+
+  <input
+    type="file"
+    accept=".pdf,.jpg,.jpeg,.png"
+    onChange={(e) => setFile(e.target.files[0])}
+    className="w-full border rounded-xl p-3"
+  />
+
+</div>
+
+          {/* Notes */}
+
+          <div>
+
+            <label className="block mb-2 font-semibold">
+
+              Notes
+
+            </label>
+
+            <textarea
+              rows="5"
+              name="notes"
+              value={formData.notes}
+              onChange={handleChange}
+              placeholder="Any additional service details..."
+              className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+            />
+
+          </div>
+                    {/* Buttons */}
+
+          <div className="flex justify-end gap-4 pt-6">
+
+            <button
+              type="button"
+              onClick={() => navigate("/services")}
+              className="px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-100 transition"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-3 rounded-xl transition"
+            >
+              <Save size={18} />
+
+              {loading ? "Saving..." : "Save Service"}
+
+            </button>
+
+          </div>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  );
 
 }

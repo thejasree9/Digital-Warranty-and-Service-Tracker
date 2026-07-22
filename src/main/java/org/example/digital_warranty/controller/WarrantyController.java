@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/warranty")
 @RequiredArgsConstructor
@@ -93,6 +95,21 @@ public class WarrantyController {
                         .success(true)
                         .message("Warranty deleted successfully")
                         .data("Deleted")
+                        .build()
+        );
+    }
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<WarrantyResponse>>> getAll(
+            Authentication authentication) {
+
+        List<WarrantyResponse> response =
+                warrantyService.getAllWarranties(authentication.getName());
+
+        return ResponseEntity.ok(
+                ApiResponse.<List<WarrantyResponse>>builder()
+                        .success(true)
+                        .message("Warranties fetched successfully")
+                        .data(response)
                         .build()
         );
     }

@@ -25,5 +25,6 @@ public interface WarrantyRepository extends JpaRepository<Warranty,Long> {
             LocalDate start,
             LocalDate end
     );
+    List<Warranty> findByProductUserEmail(String email);
 
 }

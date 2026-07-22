@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   ResponsiveContainer,
   BarChart,
@@ -7,22 +8,82 @@ import {
   Tooltip,
   CartesianGrid,
 } from "recharts";
-
+import { toast } from "react-hot-toast";
+import { getProducts } from "../../services/productService";
 import { useTheme } from "../../context/ThemeContext";
 
-const data = [
-  { month: "Jan", products: 8 },
-  { month: "Feb", products: 12 },
-  { month: "Mar", products: 15 },
-  { month: "Apr", products: 18 },
-  { month: "May", products: 22 },
-  { month: "Jun", products: 28 },
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
 ];
 
 const ProductChart = () => {
+
   const { darkMode } = useTheme();
 
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    loadChart();
+  }, []);
+
+  const loadChart = async () => {
+
+    try {
+
+      const response = await getProducts(0, 100);
+
+      const products = response.data.products || [];
+
+      const monthlyCount = {};
+
+      months.forEach((month) => {
+        monthlyCount[month] = 0;
+      });
+
+      products.forEach((product) => {
+
+        if (product.createdAt) {
+
+          const date = new Date(product.createdAt);
+
+          const month = months[date.getMonth()];
+
+          monthlyCount[month]++;
+
+        }
+
+      });
+
+      const chartData = months.map((month) => ({
+        month,
+        products: monthlyCount[month],
+      }));
+
+      setData(chartData);
+
+    } catch (error) {
+
+      console.error(error);
+
+      toast.error("Unable to load product chart");
+
+    }
+
+  };
+
   return (
+
     <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-md p-6 transition-all duration-300">
 
       <h2 className="text-xl font-semibold mb-4 text-slate-800 dark:text-white">
@@ -44,6 +105,7 @@ const ProductChart = () => {
           />
 
           <YAxis
+            allowDecimals={false}
             stroke={darkMode ? "#ffffff" : "#475569"}
           />
 
@@ -67,7 +129,9 @@ const ProductChart = () => {
       </ResponsiveContainer>
 
     </div>
+
   );
+
 };
 
 export default ProductChart;

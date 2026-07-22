@@ -151,11 +151,11 @@ const handleChangePassword = async () => {
 
       <div>
 
-        <h1 className="text-3xl font-bold">
+        <h1 className="text-3xl font-bold text-slate-800 dark:text-white">
           My Profile
         </h1>
 
-        <p className="text-gray-500 mt-2">
+        <p className="text-gray-500 dark:text-gray-400 mt-2">
           Manage your personal information.
         </p>
 
@@ -165,7 +165,7 @@ const handleChangePassword = async () => {
 
         {/* Left Card */}
 
-        <div className="bg-white rounded-2xl shadow-md p-6 flex flex-col items-center">
+        <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-md p-6 flex flex-col items-center transition-all duration-300">
 
           <img
                 src={
@@ -180,11 +180,11 @@ const handleChangePassword = async () => {
 
             <>
 
-              <h2 className="text-2xl font-bold mt-4">
+              <h2 className="text-2xl font-bold mt-4 text-slate-800 dark:text-white">
                 {profile?.name}
               </h2>
 
-              <p className="text-gray-500">
+              <p className="text-gray-500 dark:text-gray-400">
                 {profile?.role}
               </p>
 
@@ -196,7 +196,7 @@ const handleChangePassword = async () => {
 
   <input
     type="text"
-    className="w-full border rounded-xl p-3"
+    className="w-full border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
     name="name"
     value={formData.name}
     onChange={handleChange}
@@ -205,7 +205,7 @@ const handleChangePassword = async () => {
 
   <input
     type="text"
-    className="w-full border rounded-xl p-3"
+    className="w-full border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
     name="phone"
     value={formData.phone}
     onChange={handleChange}
@@ -231,7 +231,7 @@ const handleChangePassword = async () => {
 
               <button
   onClick={() => setShowPasswordModal(true)}
-  className="flex items-center gap-2 border px-5 py-2 rounded-xl hover:bg-gray-100"
+  className="flex items-center gap-2 border border-gray-300 dark:border-slate-700 px-5 py-2 rounded-xl hover:bg-gray-100 dark:hover:bg-slate-800 text-slate-800 dark:text-white transition-colors duration-300"
 >
   <Lock size={18} />
   Password
@@ -267,9 +267,9 @@ const handleChangePassword = async () => {
         </div>
                 {/* Personal Information */}
 
-        <div className="lg:col-span-2 bg-white rounded-2xl shadow-md p-6">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-md p-6 transition-all duration-300">
 
-          <h2 className="text-xl font-bold mb-6">
+          <h2 className="text-xl font-bold mb-6 text-slate-800 dark:text-white">
             Personal Information
           </h2>
 
@@ -278,24 +278,27 @@ const handleChangePassword = async () => {
             <div className="flex items-center gap-3">
               <User className="text-blue-600" />
               <div>
-                <p className="text-gray-500 text-sm">Full Name</p>
-                <p className="font-semibold">{profile?.name}</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">Full Name</p>
+                <p className="font-semibold text-slate-800 dark:text-white">{profile?.name}</p>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
               <Mail className="text-blue-600" />
               <div>
-                <p className="text-gray-500 text-sm">Email</p>
-                <p className="font-semibold">{profile?.email}</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">Email</p>
+<p className="font-semibold text-slate-800 dark:text-white">
+  {profile?.email}
+</p>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
               <Phone className="text-blue-600" />
               <div>
-                <p className="text-gray-500 text-sm">Phone</p>
-                <p className="font-semibold">
+               <p className="text-gray-500 dark:text-gray-400 text-sm">Phone</p>
+
+<p className="font-semibold text-slate-800 dark:text-white">
                   {profile?.phone || "Not Available"}
                 </p>
               </div>
@@ -304,16 +307,22 @@ const handleChangePassword = async () => {
             <div className="flex items-center gap-3">
               <ShieldCheck className="text-blue-600" />
               <div>
-                <p className="text-gray-500 text-sm">Role</p>
-                <p className="font-semibold">{profile?.role}</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm">Role</p>
+
+<p className="font-semibold text-slate-800 dark:text-white">
+  {profile?.role}
+</p>
               </div>
             </div>
 
             <div className="flex items-center gap-3">
               <Calendar className="text-blue-600" />
               <div>
-                <p className="text-gray-500 text-sm">Joined</p>
-                <p className="font-semibold">
+                <p className="text-gray-500 dark:text-gray-400 text-sm">
+  Joined
+</p>
+
+<p className="font-semibold text-slate-800 dark:text-white">
                   {profile?.createdAt
                     ? new Date(profile.createdAt).toLocaleDateString()
                     : "-"}
@@ -331,38 +340,38 @@ const handleChangePassword = async () => {
 
       <div className="grid md:grid-cols-4 gap-6">
 
-        <div className="bg-white rounded-2xl shadow-md p-6 text-center">
+        <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-md p-6 text-center transition-all duration-300">
           <h3 className="text-3xl font-bold text-blue-600">
             58
           </h3>
-          <p className="text-gray-500 mt-2">
+          <p className="text-gray-500 dark:text-gray-400 mt-2">
             Products
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-md p-6 text-center">
+<div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-md p-6 text-center transition-all duration-300">
           <h3 className="text-3xl font-bold text-green-600">
             43
           </h3>
-          <p className="text-gray-500 mt-2">
+          <p className="text-gray-500 dark:text-gray-400 mt-2">
             Active Warranty
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-md p-6 text-center">
+        <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-md p-6 text-center transition-all duration-300">
           <h3 className="text-3xl font-bold text-orange-500">
             12
           </h3>
-          <p className="text-gray-500 mt-2">
+          <p className="text-gray-500 dark:text-gray-400 mt-2">
             Services
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-md p-6 text-center">
+        <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-md p-6 text-center transition-all duration-300">
           <h3 className="text-3xl font-bold text-red-500">
             5
           </h3>
-          <p className="text-gray-500 mt-2">
+          <p className="text-gray-500 dark:text-gray-400 mt-2">
             Alerts
           </p>
         </div>
@@ -371,27 +380,27 @@ const handleChangePassword = async () => {
 
       {/* Recent Activity */}
 
-      <div className="bg-white rounded-2xl shadow-md p-6">
+      <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-md p-6 transition-all duration-300">
 
-        <h2 className="text-xl font-bold mb-5">
+       <h2 className="text-xl font-bold mb-5 text-slate-800 dark:text-white">
           Recent Activity
         </h2>
 
         <div className="space-y-4">
 
-          <div className="border-l-4 border-blue-600 pl-4">
+          <div className="border-l-4 border-blue-600 pl-4 text-slate-800 dark:text-white">
             Added Dell Laptop
           </div>
 
-          <div className="border-l-4 border-green-600 pl-4">
+          <div className="border-l-4 border-blue-600 pl-4 text-slate-800 dark:text-white">
             Samsung TV Warranty Updated
           </div>
 
-          <div className="border-l-4 border-orange-500 pl-4">
+          <div className="border-l-4 border-orange-500 pl-4 text-slate-800 dark:text-white">
             Washing Machine Service Scheduled
           </div>
 
-          <div className="border-l-4 border-red-500 pl-4">
+          <div className="border-l-4 border-red-500 pl-4 text-slate-800 dark:text-white">
             HP Printer Warranty Expired
           </div>
 
@@ -402,9 +411,9 @@ const handleChangePassword = async () => {
 
 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
 
-<div className="bg-white rounded-xl p-6 w-[420px]">
+<div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-xl p-6 w-[420px] transition-all duration-300">
 
-<h2 className="text-xl font-bold mb-5">
+<h2 className="text-xl font-bold mb-5 text-slate-800 dark:text-white">
 Change Password
 </h2>
 
@@ -414,7 +423,7 @@ name="currentPassword"
 placeholder="Current Password"
 value={passwordData.currentPassword}
 onChange={handlePasswordChange}
-className="w-full border rounded-lg p-3 mb-4"
+className="w-full border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
 />
 
 <input
@@ -423,7 +432,7 @@ name="newPassword"
 placeholder="New Password"
 value={passwordData.newPassword}
 onChange={handlePasswordChange}
-className="w-full border rounded-lg p-3 mb-4"
+className="w-full border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
 />
 
 <input
@@ -432,14 +441,14 @@ name="confirmPassword"
 placeholder="Confirm Password"
 value={passwordData.confirmPassword}
 onChange={handlePasswordChange}
-className="w-full border rounded-lg p-3 mb-6"
+className="w-full border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white rounded-lg p-3 mb-6 focus:outline-none focus:ring-2 focus:ring-blue-500"
 />
 
 <div className="flex justify-end gap-3">
 
 <button
 onClick={() => setShowPasswordModal(false)}
-className="px-5 py-2 rounded-lg border"
+className="px-5 py-2 rounded-lg border border-gray-300 dark:border-slate-700 text-slate-800 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors duration-300"
 >
 Cancel
 </button>

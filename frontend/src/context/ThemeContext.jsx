@@ -9,6 +9,7 @@ export const ThemeProvider = ({ children }) => {
 
   useEffect(() => {
     if (darkMode) {
+      console.log("Dark Mode:", darkMode);
       document.documentElement.classList.add("dark");
       localStorage.setItem("theme", "dark");
     } else {

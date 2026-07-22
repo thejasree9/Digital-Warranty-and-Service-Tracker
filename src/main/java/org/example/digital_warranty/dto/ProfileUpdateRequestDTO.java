@@ -16,9 +16,6 @@ public class ProfileUpdateRequestDTO {
     @NotBlank(message = "Name is required")
     private String name;
 
-    @Email(message = "Invalid email")
-    @NotBlank(message = "Email is required")
-    private String email;
 
     private String phone;
 

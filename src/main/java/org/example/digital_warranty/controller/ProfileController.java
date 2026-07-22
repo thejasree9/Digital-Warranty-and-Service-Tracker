@@ -2,6 +2,7 @@ package org.example.digital_warranty.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.digital_warranty.dto.ChangePasswordRequestDTO;
 import org.example.digital_warranty.dto.ProfileResponseDTO;
 import org.example.digital_warranty.dto.ProfileUpdateRequestDTO;
 import org.example.digital_warranty.service.ProfileService;
@@ -28,5 +29,13 @@ public class ProfileController {
     ) {
 
         return ResponseEntity.ok(profileService.updateProfile(request));
+    }
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePassword(
+            @RequestBody ChangePasswordRequestDTO request) {
+
+        profileService.changePassword(request);
+
+        return ResponseEntity.ok("Password changed successfully");
     }
 }

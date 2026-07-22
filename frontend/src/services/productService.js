@@ -1,14 +1,25 @@
 import API from "./api";
 
-// Get all products
-export const getProducts = async () => {
-  const response = await API.get("/api/products");
+// Get all products (with pagination)
+export const getProducts = async (
+  page = 0,
+  size = 5,
+  sortBy = "productName",
+  direction = "asc"
+) => {
+
+  const response = await API.get(
+    `/api/products?page=${page}&size=${size}&sortBy=${sortBy}&direction=${direction}`
+  );
+
   return response.data;
 };
 
-// Get one product
+// Get single product
 export const getProduct = async (id) => {
+
   const response = await API.get(`/api/products/${id}`);
+
   return response.data;
 };
 
@@ -43,25 +54,59 @@ export const addProduct = async (product, file) => {
 };
 
 // Update product
-export const updateProduct = async (id, product) => {
-  const response = await API.put(`/api/products/${id}`, product);
+export const updateProduct = async (id, product, file) => {
+
+  const formData = new FormData();
+
+  formData.append(
+    "product",
+    new Blob(
+      [JSON.stringify(product)],
+      { type: "application/json" }
+    )
+  );
+
+  if (file) {
+    formData.append("file", file);
+  }
+
+  const response = await API.put(
+    `/api/products/${id}`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
   return response.data;
 };
 
 // Delete product
 export const deleteProduct = async (id) => {
+
   const response = await API.delete(`/api/products/${id}`);
+
   return response.data;
 };
 
-// Search products
+// Search by product name
 export const searchProducts = async (name) => {
-  const response = await API.get(`/api/products/search?name=${name}`);
+
+  const response = await API.get(
+    `/api/products/search?name=${name}`
+  );
+
   return response.data;
 };
 
-// Get products by brand
+// Search by brand
 export const getProductsByBrand = async (brand) => {
-  const response = await API.get(`/api/products/brand?brand=${brand}`);
+
+  const response = await API.get(
+    `/api/products/brand?brand=${brand}`
+  );
+
   return response.data;
 };

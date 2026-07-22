@@ -36,9 +36,12 @@ public class ProductServiceImpl implements ProductService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        String invoiceUrl = request.getInvoiceUrl();
+        String invoiceUrl = null;
+
         if (invoice != null && !invoice.isEmpty()) {
             invoiceUrl = cloudinaryService.uploadFile(invoice);
+        } else if (request.getInvoiceUrl() != null) {
+            invoiceUrl = request.getInvoiceUrl();
         }
 
         Product product = Product.builder()
@@ -81,7 +84,6 @@ public class ProductServiceImpl implements ProductService {
 
         return map(product);
     }
-
     @Override
     public ProductResponse updateProduct(
             Long id,
@@ -96,6 +98,7 @@ public class ProductServiceImpl implements ProductService {
             throw new UnauthorizedException("Unauthorized");
         }
 
+        // Update product details
         product.setProductName(request.getProductName());
         product.setBrand(request.getBrand());
         product.setModel(request.getModel());
@@ -103,7 +106,23 @@ public class ProductServiceImpl implements ProductService {
         product.setPurchaseDate(request.getPurchaseDate());
         product.setPrice(request.getPrice());
 
-        return map(productRepository.save(product));
+        // Update invoice if a new file is uploaded
+        if (file != null && !file.isEmpty()) {
+
+            String invoiceUrl = cloudinaryService.uploadFile(file);
+
+            product.setInvoiceUrl(invoiceUrl);
+
+        } else if (request.getInvoiceUrl() != null) {
+
+            // Keep the existing invoice URL if no new file is uploaded
+            product.setInvoiceUrl(request.getInvoiceUrl());
+
+        }
+
+        Product updatedProduct = productRepository.save(product);
+
+        return map(updatedProduct);
     }
 
     @Override

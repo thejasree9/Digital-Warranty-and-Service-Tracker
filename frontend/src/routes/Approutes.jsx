@@ -11,9 +11,14 @@ import ProductList from "../pages/products/ProductList";
 import AddProduct from "../pages/products/AddProduct";
 import EditProduct from "../pages/products/EditProduct";
 import ProductDetails from "../pages/products/ProductDetails";
-
+import WarrantyList from "../pages/warranty/WarrantyList";
 import AddWarranty from "../pages/warranty/AddWarranty";
+import WarrantyDetails from "../pages/warranty/WarrantyDetails";
+import EditWarranty from "../pages/warranty/EditWarranty";
+import ServiceList from "../pages/service/ServiceList";
 import AddService from "../pages/service/AddService";
+import ServiceDetails from "../pages/service/ServiceDetails";
+import EditService from "../pages/service/EditService";
 
 import ProtectedRoute from "./ProtectedRoute";
 import MainLayout from "../components/layout/MainLayout";
@@ -46,12 +51,19 @@ const AppRoutes = () => {
         <Route path="products/edit/:id" element={<EditProduct />} />
         <Route path="products/:id" element={<ProductDetails />} />
 
-        {/* Warranty */}
-        <Route path="warranty/add" element={<AddWarranty />} />
+        {/* Warranty */} 
+        <Route path="warranty" element={<WarrantyList />} />
+<Route path="warranty/add" element={<AddWarranty />} />
+<Route path="warranty/:productId" element={<WarrantyDetails />} />
+<Route path="warranty/edit/:productId" element={<EditWarranty />} />
 
         {/* Service */}
-        <Route path="service/add" element={<AddService />} />
+       <Route path="services" element={<ServiceList />} />
+<Route path="services/add" element={<AddService />} />
+<Route path="services/:id" element={<ServiceDetails />} />
+<Route path="services/edit/:id" element={<EditService />} />
       </Route>
+     
 
       {/* 404 */}
       <Route path="*" element={<NotFound />} />

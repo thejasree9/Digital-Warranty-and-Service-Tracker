@@ -12,6 +12,8 @@ import org.example.digital_warranty.repository.WarrantyRepository;
 import org.example.digital_warranty.service.WarrantyService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class WarrantyServiceImpl implements WarrantyService {
@@ -105,5 +107,14 @@ public class WarrantyServiceImpl implements WarrantyService {
                 .terms(warranty.getTerms())
                 .build();
     }
+    @Override
+    public List<WarrantyResponse> getAllWarranties(String email) {
 
+        return warrantyRepository
+                .findByProductUserEmail(email)
+                .stream()
+                .map(this::map)
+                .toList();
+
+    }
 }

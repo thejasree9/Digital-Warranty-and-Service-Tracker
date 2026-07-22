@@ -38,10 +38,10 @@ const Sidebar = () => {
       icon: <ShieldCheck size={20} />,
     },
     {
-      name: "Service History",
-      path: "/service-history",
-      icon: <Wrench size={20} />,
-    },
+  name: "Service History",
+  path: "/services",
+  icon: <Wrench size={20} />,
+},
     {
       name: "Notifications",
       path: "/notifications",

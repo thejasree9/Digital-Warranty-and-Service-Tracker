@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
+import Swal from "sweetalert2";
 import {
   Eye,
   Pencil,
@@ -132,29 +132,36 @@ export default function ProductList() {
       return;
 
     }
+const result = await Swal.fire({
+  title: "Delete Product?",
+  text: "This action cannot be undone.",
+  icon: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#dc2626",
+  cancelButtonColor: "#6b7280",
+  confirmButtonText: "Yes, Delete",
+  cancelButtonText: "Cancel",
+});
 
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this product?"
-    );
-
-    if (!confirmDelete) return;
+if (!result.isConfirmed) return;
 
     try {
 
-      await deleteProduct(id);
+  const response = await deleteProduct(id);
 
-      toast.success("Product deleted successfully");
+  toast.success(response.message);
 
-      loadProducts();
+  await loadProducts();
 
-    } catch (error) {
+} catch (error) {
 
-      console.error(error);
+  console.error(error);
 
-      toast.error("Delete failed");
+  toast.error(
+    error.response?.data?.message || "Delete failed"
+  );
 
-    }
-
+}
   };
 
   const nextPage = () => {

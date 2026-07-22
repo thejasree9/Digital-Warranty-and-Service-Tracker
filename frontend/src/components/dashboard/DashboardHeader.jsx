@@ -9,19 +9,21 @@ const DashboardHeader = () => {
   });
 
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 transition-colors duration-300">
       <div>
-        <h1 className="text-3xl font-bold text-slate-800">
+        <h1 className="text-3xl font-bold text-slate-800 dark:text-white transition-colors duration-300">
           Dashboard
         </h1>
 
-        <p className="text-gray-500 mt-2">
+        <p className="mt-2 text-gray-500 dark:text-gray-400 transition-colors duration-300">
           Welcome back! Here's an overview of your warranty tracker.
         </p>
       </div>
 
-      <div className="flex items-center gap-2 text-blue-600 font-medium mt-4 md:mt-0">
-        
+      <div className="flex items-center gap-2 mt-4 md:mt-0 text-blue-600 dark:text-blue-400 font-medium transition-colors duration-300">
+        <CalendarDays size={18} />
+
+        <span>{today}</span>
       </div>
     </div>
   );

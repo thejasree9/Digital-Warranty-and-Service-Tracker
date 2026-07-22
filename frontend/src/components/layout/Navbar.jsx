@@ -7,10 +7,11 @@ import {
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
-import ProfileDropdown from "./ProfileDropdown"; // Adjust the path if needed
+import ProfileDropdown from "./ProfileDropdown"; 
+import { useTheme } from "../../context/ThemeContext";
 
 const Navbar = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const { darkMode, toggleTheme } = useTheme();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const profileRef = useRef(null);
   const { user } = useAuth();
@@ -32,11 +33,11 @@ const Navbar = () => {
 }, []);
   
   return (
-    <header className="bg-white shadow-sm border-b px-6 py-4 flex items-center justify-between">
+    <header className="bg-white dark:bg-slate-900 dark:text-white border-b border-gray-200 dark:border-slate-700 shadow-sm px-6 py-4 flex items-center justify-between">
 
       {/* Search Bar */}
 
-      <div className="flex items-center bg-gray-100 rounded-xl px-4 py-2 w-full max-w-md">
+      <div className="flex items-center bg-gray-100 dark:bg-slate-800 rounded-xl px-4 py-2 w-full max-w-md">
 
         <Search className="text-gray-400" size={18} />
 
@@ -65,7 +66,7 @@ const Navbar = () => {
         {/* Dark Mode */}
 
         <button
-          onClick={() => setDarkMode(!darkMode)}
+          onClick={toggleTheme}
           className="p-2 rounded-xl hover:bg-gray-100 transition"
         >
           {darkMode ? <Sun size={22} /> : <Moon size={22} />}

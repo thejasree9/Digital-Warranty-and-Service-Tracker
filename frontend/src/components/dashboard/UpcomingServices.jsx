@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Wrench } from "lucide-react";
 import { toast } from "react-hot-toast";
-
 import { getServices } from "../../services/serviceHistoryService";
 
 const UpcomingServices = () => {
@@ -18,7 +17,7 @@ const UpcomingServices = () => {
 
       const response = await getServices();
 
-      const sortedServices = response.data
+      const sortedServices = (response.data || [])
         .sort(
           (a, b) =>
             new Date(b.serviceDate) -
@@ -40,15 +39,15 @@ const UpcomingServices = () => {
 
   return (
 
-    <div className="bg-white rounded-2xl shadow-md p-6">
+    <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-md p-6 transition-all duration-300">
 
       <div className="flex justify-between items-center mb-5">
 
-        <h2 className="text-xl font-bold">
+        <h2 className="text-xl font-bold text-slate-800 dark:text-white">
           Recent Services
         </h2>
 
-        <Wrench className="text-blue-600" />
+        <Wrench className="text-blue-600 dark:text-blue-400" />
 
       </div>
 
@@ -56,7 +55,7 @@ const UpcomingServices = () => {
 
         {services.length === 0 ? (
 
-          <p className="text-gray-500">
+          <p className="text-gray-500 dark:text-gray-400">
             No service history found.
           </p>
 
@@ -66,22 +65,22 @@ const UpcomingServices = () => {
 
             <div
               key={service.id}
-              className="border rounded-xl p-4 hover:bg-gray-50"
+              className="border border-gray-200 dark:border-slate-700 rounded-xl p-4 hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors duration-300"
             >
 
-              <h3 className="font-semibold">
+              <h3 className="font-semibold text-slate-800 dark:text-white">
                 {service.productName}
               </h3>
 
-              <p className="text-gray-500 text-sm">
+              <p className="text-gray-500 dark:text-gray-400 text-sm">
                 {service.serviceCenter}
               </p>
 
-              <p className="text-gray-500 text-sm">
+              <p className="text-gray-500 dark:text-gray-400 text-sm">
                 {service.description}
               </p>
 
-              <p className="text-blue-600 text-sm mt-2">
+              <p className="text-blue-600 dark:text-blue-400 text-sm mt-2">
                 {new Date(
                   service.serviceDate
                 ).toLocaleDateString()}

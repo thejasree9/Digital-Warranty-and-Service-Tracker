@@ -15,7 +15,9 @@ import {
   Wrench,
   AlertTriangle,
 } from "lucide-react";
+
 import toast from "react-hot-toast";
+import { useTheme } from "../../context/ThemeContext";
 
 import {
   getProfile,
@@ -26,6 +28,8 @@ import {
 import { getDashboard } from "../../services/dashboardService";
 
 const Profile = () => {
+
+  const { darkMode } = useTheme();
 
   const [loading, setLoading] = useState(true);
 
@@ -58,19 +62,18 @@ const Profile = () => {
 
     try {
 
-      const [profileResponse, dashboardResponse] =
-        await Promise.all([
-          getProfile(),
-          getDashboard(),
-        ]);
+      const [profileRes, dashboardRes] = await Promise.all([
+        getProfile(),
+        getDashboard(),
+      ]);
 
-      setProfile(profileResponse);
+      setProfile(profileRes);
 
-      setDashboard(dashboardResponse.data);
+      setDashboard(dashboardRes.data);
 
       setFormData({
-        name: profileResponse.name || "",
-        phone: profileResponse.phone || "",
+        name: profileRes.name || "",
+        phone: profileRes.phone || "",
       });
 
     } catch (error) {
@@ -100,10 +103,9 @@ const Profile = () => {
 
     try {
 
-      const updatedProfile =
-        await updateProfile(formData);
+      const updated = await updateProfile(formData);
 
-      setProfile(updatedProfile);
+      setProfile(updated);
 
       setEditing(false);
 
@@ -182,36 +184,43 @@ const Profile = () => {
   if (loading) {
 
     return (
+
       <div className="flex justify-center items-center h-screen">
-        <h2 className="text-xl font-semibold">
+
+        <h2 className="text-xl font-semibold text-slate-800 dark:text-white">
           Loading Profile...
         </h2>
+
       </div>
+
     );
 
   }
   return (
+
   <div className="space-y-8">
 
     {/* Header */}
 
-    <div className="flex items-center justify-between">
+    <div className="flex flex-col md:flex-row justify-between items-center gap-5">
 
       <div>
-        <h1 className="text-3xl font-bold">
+
+        <h1 className="text-3xl font-bold text-slate-800 dark:text-white">
           My Profile
         </h1>
 
-        <p className="text-gray-500 mt-2">
-          View and manage your account.
+        <p className="text-gray-500 dark:text-gray-400 mt-2">
+          Manage your account information.
         </p>
+
       </div>
 
       {!editing ? (
 
         <button
           onClick={() => setEditing(true)}
-          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl"
+          className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl transition"
         >
           <Edit size={18} />
           Edit Profile
@@ -223,7 +232,7 @@ const Profile = () => {
 
           <button
             onClick={handleSave}
-            className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-xl"
+            className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-5 py-3 rounded-xl transition"
           >
             <Save size={18} />
             Save
@@ -231,7 +240,7 @@ const Profile = () => {
 
           <button
             onClick={handleCancel}
-            className="flex items-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-5 py-3 rounded-xl"
+            className="flex items-center gap-2 bg-gray-500 hover:bg-gray-600 text-white px-5 py-3 rounded-xl transition"
           >
             <X size={18} />
             Cancel
@@ -245,30 +254,57 @@ const Profile = () => {
 
     {/* Profile Card */}
 
-    <div className="bg-white rounded-2xl shadow-md p-8">
+    <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-md p-8 transition-all duration-300">
 
-      <div className="flex flex-col md:flex-row items-center gap-8">
+      <div className="flex flex-col lg:flex-row items-center gap-8">
 
         <img
           src={
-            profile.profileImage ||
+            profile?.profileImage ||
             `https://ui-avatars.com/api/?name=${encodeURIComponent(
-              profile.name
+              profile?.name || "User"
             )}&background=2563eb&color=fff&size=200`
           }
           alt="Profile"
-          className="w-36 h-36 rounded-full border-4 border-blue-500 object-cover"
+          className="w-36 h-36 rounded-full border-4 border-blue-600 object-cover"
         />
 
-        <div className="flex-1">
+        <div className="flex-1 w-full">
 
-          {editing ? (
+          {!editing ? (
+
+            <>
+
+              <h2 className="text-3xl font-bold text-slate-800 dark:text-white">
+                {profile?.name}
+              </h2>
+
+              <p className="text-gray-500 dark:text-gray-400 mt-2">
+                {profile?.email}
+              </p>
+
+              <div className="mt-5">
+
+                <span className="bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300 px-4 py-2 rounded-full">
+
+                  Joined{" "}
+                  {profile?.createdAt
+                    ? new Date(profile.createdAt).toLocaleDateString()
+                    : "-"}
+
+                </span>
+
+              </div>
+
+            </>
+
+          ) : (
 
             <div className="space-y-5">
 
               <div>
 
-                <label className="block font-semibold mb-2">
+                <label className="font-semibold block mb-2 text-slate-700 dark:text-gray-300">
                   Name
                 </label>
 
@@ -277,14 +313,14 @@ const Profile = () => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full border rounded-xl p-3"
+                  className="w-full border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
 
               </div>
 
               <div>
 
-                <label className="block font-semibold mb-2">
+                <label className="font-semibold block mb-2 text-slate-700 dark:text-gray-300">
                   Phone
                 </label>
 
@@ -293,37 +329,12 @@ const Profile = () => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full border rounded-xl p-3"
+                  className="w-full border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
 
               </div>
 
             </div>
-
-          ) : (
-
-            <>
-
-              <h2 className="text-3xl font-bold">
-                {profile.name}
-              </h2>
-
-              <p className="text-gray-500 mt-2">
-                {profile.email}
-              </p>
-
-              <div className="mt-5">
-
-                <span className="bg-green-100 text-green-700 px-4 py-2 rounded-full">
-
-                  Joined {" "}
-                  {new Date(profile.createdAt).toLocaleDateString()}
-
-                </span>
-
-              </div>
-
-            </>
 
           )}
 
@@ -331,7 +342,7 @@ const Profile = () => {
 
         <button
           onClick={() => setShowPasswordModal(true)}
-          className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-5 py-3 rounded-xl"
+          className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-5 py-3 rounded-xl transition"
         >
           <Lock size={18} />
           Change Password
@@ -340,12 +351,11 @@ const Profile = () => {
       </div>
 
     </div>
+        {/* Personal Information */}
 
-    {/* Personal Information */}
+    <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-md p-8 transition-all duration-300">
 
-    <div className="bg-white rounded-2xl shadow-md p-8">
-
-      <h2 className="text-2xl font-bold mb-6">
+      <h2 className="text-2xl font-bold mb-6 text-slate-800 dark:text-white">
         Personal Information
       </h2>
 
@@ -357,12 +367,12 @@ const Profile = () => {
 
           <div>
 
-            <p className="text-gray-500 text-sm">
-              Name
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
+              Full Name
             </p>
 
-            <h3 className="font-semibold">
-              {profile.name}
+            <h3 className="font-semibold text-slate-800 dark:text-white">
+              {profile?.name}
             </h3>
 
           </div>
@@ -375,12 +385,12 @@ const Profile = () => {
 
           <div>
 
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
               Email
             </p>
 
-            <h3 className="font-semibold">
-              {profile.email}
+            <h3 className="font-semibold text-slate-800 dark:text-white">
+              {profile?.email}
             </h3>
 
           </div>
@@ -393,12 +403,12 @@ const Profile = () => {
 
           <div>
 
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
               Phone
             </p>
 
-            <h3 className="font-semibold">
-              {profile.phone || "Not Available"}
+            <h3 className="font-semibold text-slate-800 dark:text-white">
+              {profile?.phone || "Not Available"}
             </h3>
 
           </div>
@@ -411,12 +421,14 @@ const Profile = () => {
 
           <div>
 
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
               Joined Date
             </p>
 
-            <h3 className="font-semibold">
-              {new Date(profile.createdAt).toLocaleDateString()}
+            <h3 className="font-semibold text-slate-800 dark:text-white">
+              {profile?.createdAt
+                ? new Date(profile.createdAt).toLocaleDateString()
+                : "-"}
             </h3>
 
           </div>
@@ -426,11 +438,12 @@ const Profile = () => {
       </div>
 
     </div>
-        {/* Statistics */}
 
-    <div className="bg-white rounded-2xl shadow-md p-8">
+    {/* Statistics */}
 
-      <h2 className="text-2xl font-bold mb-6">
+    <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-md p-8 transition-all duration-300">
+
+      <h2 className="text-2xl font-bold mb-6 text-slate-800 dark:text-white">
         Statistics
       </h2>
 
@@ -438,7 +451,7 @@ const Profile = () => {
 
         {/* Products */}
 
-        <div className="bg-blue-50 rounded-2xl p-6 text-center hover:shadow-lg transition">
+        <div className="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-6 text-center hover:shadow-lg transition">
 
           <Package
             className="mx-auto text-blue-600 mb-3"
@@ -449,7 +462,7 @@ const Profile = () => {
             {dashboard?.totalProducts ?? 0}
           </h2>
 
-          <p className="text-gray-600 mt-2">
+          <p className="text-gray-600 dark:text-gray-300 mt-2">
             Products
           </p>
 
@@ -457,7 +470,7 @@ const Profile = () => {
 
         {/* Active Warranty */}
 
-        <div className="bg-green-50 rounded-2xl p-6 text-center hover:shadow-lg transition">
+        <div className="bg-green-50 dark:bg-green-900/20 rounded-2xl p-6 text-center hover:shadow-lg transition">
 
           <ShieldCheck
             className="mx-auto text-green-600 mb-3"
@@ -468,7 +481,7 @@ const Profile = () => {
             {dashboard?.activeWarranties ?? 0}
           </h2>
 
-          <p className="text-gray-600 mt-2">
+          <p className="text-gray-600 dark:text-gray-300 mt-2">
             Active Warranty
           </p>
 
@@ -476,7 +489,7 @@ const Profile = () => {
 
         {/* Services */}
 
-        <div className="bg-orange-50 rounded-2xl p-6 text-center hover:shadow-lg transition">
+        <div className="bg-orange-50 dark:bg-orange-900/20 rounded-2xl p-6 text-center hover:shadow-lg transition">
 
           <Wrench
             className="mx-auto text-orange-600 mb-3"
@@ -487,7 +500,7 @@ const Profile = () => {
             {dashboard?.totalServices ?? 0}
           </h2>
 
-          <p className="text-gray-600 mt-2">
+          <p className="text-gray-600 dark:text-gray-300 mt-2">
             Services
           </p>
 
@@ -495,7 +508,7 @@ const Profile = () => {
 
         {/* Expiring Soon */}
 
-        <div className="bg-red-50 rounded-2xl p-6 text-center hover:shadow-lg transition">
+        <div className="bg-red-50 dark:bg-red-900/20 rounded-2xl p-6 text-center hover:shadow-lg transition">
 
           <AlertTriangle
             className="mx-auto text-red-600 mb-3"
@@ -506,7 +519,7 @@ const Profile = () => {
             {dashboard?.expiringSoon ?? 0}
           </h2>
 
-          <p className="text-gray-600 mt-2">
+          <p className="text-gray-600 dark:text-gray-300 mt-2">
             Expiring Soon
           </p>
 
@@ -521,11 +534,11 @@ const Profile = () => {
 
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
 
-        <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-8">
+        <div className="bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl w-full max-w-md p-8 transition-all duration-300">
 
           <div className="flex justify-between items-center mb-6">
 
-            <h2 className="text-2xl font-bold">
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-white">
               Change Password
             </h2>
 
@@ -540,7 +553,7 @@ const Profile = () => {
                 });
               }}
             >
-              <X className="text-gray-500 hover:text-red-500"/>
+              <X className="text-gray-500 hover:text-red-500" />
             </button>
 
           </div>
@@ -551,7 +564,7 @@ const Profile = () => {
 
             <div>
 
-              <label className="block font-semibold mb-2">
+              <label className="block font-semibold mb-2 text-slate-700 dark:text-gray-300">
                 Current Password
               </label>
 
@@ -562,19 +575,19 @@ const Profile = () => {
                   name="currentPassword"
                   value={passwordData.currentPassword}
                   onChange={handlePasswordInput}
-                  className="w-full border rounded-xl p-3 pr-12"
-                  placeholder="Enter current password"
+                  className="w-full border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white rounded-xl p-3 pr-12"
+                  placeholder="Current Password"
                 />
 
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-3"
+                  className="absolute right-3 top-3 text-gray-500"
                 >
                   {showPassword ? (
-                    <EyeOff size={20}/>
+                    <EyeOff size={20} />
                   ) : (
-                    <Eye size={20}/>
+                    <Eye size={20} />
                   )}
                 </button>
 
@@ -586,7 +599,7 @@ const Profile = () => {
 
             <div>
 
-              <label className="block font-semibold mb-2">
+              <label className="block font-semibold mb-2 text-slate-700 dark:text-gray-300">
                 New Password
               </label>
 
@@ -595,8 +608,8 @@ const Profile = () => {
                 name="newPassword"
                 value={passwordData.newPassword}
                 onChange={handlePasswordInput}
-                className="w-full border rounded-xl p-3"
-                placeholder="Enter new password"
+                className="w-full border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white rounded-xl p-3"
+                placeholder="New Password"
               />
 
             </div>
@@ -605,7 +618,7 @@ const Profile = () => {
 
             <div>
 
-              <label className="block font-semibold mb-2">
+              <label className="block font-semibold mb-2 text-slate-700 dark:text-gray-300">
                 Confirm Password
               </label>
 
@@ -614,15 +627,15 @@ const Profile = () => {
                 name="confirmPassword"
                 value={passwordData.confirmPassword}
                 onChange={handlePasswordInput}
-                className="w-full border rounded-xl p-3"
-                placeholder="Confirm new password"
+                className="w-full border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white rounded-xl p-3"
+                placeholder="Confirm Password"
               />
 
             </div>
 
           </div>
 
-          <div className="flex justify-end gap-4 mt-8">
+          <div className="flex justify-end gap-3 mt-8">
 
             <button
               onClick={() => {
@@ -634,16 +647,16 @@ const Profile = () => {
                   confirmPassword: "",
                 });
               }}
-              className="px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-100"
+              className="px-6 py-3 rounded-xl border border-gray-300 dark:border-slate-700 text-slate-700 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800 transition"
             >
               Cancel
             </button>
 
             <button
               onClick={handleChangePassword}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl"
+              className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white transition"
             >
-              Change Password
+              Update Password
             </button>
 
           </div>

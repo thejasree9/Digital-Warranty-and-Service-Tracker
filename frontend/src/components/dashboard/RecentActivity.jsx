@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Package, Wrench } from "lucide-react";
 import { toast } from "react-hot-toast";
-
 import { getProducts } from "../../services/productService";
 import { getServices } from "../../services/serviceHistoryService";
 
@@ -31,16 +30,18 @@ const RecentActivity = () => {
         description: `${product.brand} product added to your account.`,
         date: product.createdAt,
         icon: <Package size={18} />,
-        color: "bg-blue-100 text-blue-600",
+        color:
+          "bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-300",
       }));
 
       const serviceActivities = services.map((service) => ({
         id: `service-${service.id}`,
         title: `${service.productName} Serviced`,
-        description: `${service.serviceCenter}`,
+        description: service.serviceCenter,
         date: service.serviceDate,
         icon: <Wrench size={18} />,
-        color: "bg-orange-100 text-orange-600",
+        color:
+          "bg-orange-100 text-orange-600 dark:bg-orange-900/40 dark:text-orange-300",
       }));
 
       const merged = [...productActivities, ...serviceActivities]
@@ -52,6 +53,7 @@ const RecentActivity = () => {
     } catch (error) {
 
       console.error(error);
+
       toast.error("Unable to load recent activity");
 
     }
@@ -60,15 +62,15 @@ const RecentActivity = () => {
 
   return (
 
-    <div className="bg-white rounded-2xl shadow-md p-6">
+    <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-md p-6 transition-all duration-300">
 
-      <h2 className="text-xl font-bold mb-6">
+      <h2 className="text-xl font-bold mb-6 text-slate-800 dark:text-white">
         Recent Activity
       </h2>
 
       {activities.length === 0 ? (
 
-        <p className="text-gray-500">
+        <p className="text-gray-500 dark:text-gray-400">
           No recent activity found.
         </p>
 
@@ -83,19 +85,17 @@ const RecentActivity = () => {
               className="flex items-start gap-4"
             >
 
-              <div
-                className={`p-3 rounded-full ${item.color}`}
-              >
+              <div className={`p-3 rounded-full ${item.color}`}>
                 {item.icon}
               </div>
 
               <div>
 
-                <h3 className="font-semibold">
+                <h3 className="font-semibold text-slate-800 dark:text-white">
                   {item.title}
                 </h3>
 
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-500 dark:text-gray-400 text-sm">
                   {item.description}
                 </p>
 

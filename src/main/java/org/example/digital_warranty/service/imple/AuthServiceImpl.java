@@ -2,6 +2,7 @@ package org.example.digital_warranty.service.imple;
 
 import lombok.RequiredArgsConstructor;
 import org.example.digital_warranty.dto.RegisterRequest;
+import org.example.digital_warranty.dto.UserResponse;
 import org.example.digital_warranty.entity.Role;
 import org.example.digital_warranty.entity.User;
 import org.example.digital_warranty.exception.ResourceNotFoundException;
@@ -55,6 +56,15 @@ public class AuthServiceImpl implements AuthService {
 
         String token = jwtService.generateToken(user.getEmail());
 
-        return new AuthResponse(token, "Login Successful");
+        return new AuthResponse(
+                token,
+                "Login Successful",
+                UserResponse.builder()
+                        .id(user.getId())
+                        .name(user.getName())
+                        .email(user.getEmail())
+                        .role(user.getRole())
+                        .build()
+        );
     }
 }

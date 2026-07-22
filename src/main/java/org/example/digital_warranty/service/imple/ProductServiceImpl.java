@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.example.digital_warranty.service.NotificationService;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final CloudinaryService cloudinaryService;
+    private final NotificationService notificationService;
     @Override
     public ProductResponse addProduct(
             ProductRequest request,
@@ -56,6 +58,11 @@ public class ProductServiceImpl implements ProductService {
                 .build();
 
         product = productRepository.save(product);
+        notificationService.createNotification(
+                user,
+                "Product Added",
+                product.getProductName() + " has been added successfully."
+        );
 
         return map(product);
     }
@@ -121,6 +128,11 @@ public class ProductServiceImpl implements ProductService {
         }
 
         Product updatedProduct = productRepository.save(product);
+        notificationService.createNotification(
+                product.getUser(),
+                "Product Updated",
+                updatedProduct.getProductName() + " has been updated successfully."
+        );
 
         return map(updatedProduct);
     }
@@ -134,6 +146,12 @@ public class ProductServiceImpl implements ProductService {
         if (!product.getUser().getEmail().equals(email)) {
             throw new UnauthorizedException("Unauthorized");
         }
+
+        notificationService.createNotification(
+                product.getUser(),
+                "Product Deleted",
+                product.getProductName() + " has been deleted successfully."
+        );
 
         productRepository.delete(product);
     }

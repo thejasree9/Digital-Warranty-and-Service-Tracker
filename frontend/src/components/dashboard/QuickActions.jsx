@@ -1,11 +1,42 @@
+import { useNavigate } from "react-router-dom";
 import {
-  Plus,
-  ShieldPlus,
+  PlusCircle,
+  ShieldCheck,
   Wrench,
-  Bell,
+  User,
 } from "lucide-react";
 
 const QuickActions = () => {
+
+  const navigate = useNavigate();
+
+  const actions = [
+    {
+      title: "Add Product",
+      icon: <PlusCircle size={22} />,
+      color: "bg-blue-600",
+      path: "/products/add",
+    },
+    {
+      title: "Add Warranty",
+      icon: <ShieldCheck size={22} />,
+      color: "bg-green-600",
+      path: "/warranty/add",
+    },
+    {
+      title: "Add Service",
+      icon: <Wrench size={22} />,
+      color: "bg-orange-500",
+      path: "/services/add",
+    },
+    {
+      title: "My Profile",
+      icon: <User size={22} />,
+      color: "bg-purple-600",
+      path: "/profile",
+    },
+  ];
+
   return (
     <div className="bg-white rounded-2xl shadow-md p-6">
 
@@ -15,27 +46,25 @@ const QuickActions = () => {
 
       <div className="grid grid-cols-2 gap-4">
 
-        <button className="bg-blue-600 hover:bg-blue-700 text-white rounded-xl p-4 flex flex-col items-center gap-2">
-          <Plus size={26} />
-          Add Product
-        </button>
+        {actions.map((action) => (
 
-        <button className="bg-green-600 hover:bg-green-700 text-white rounded-xl p-4 flex flex-col items-center gap-2">
-          <ShieldPlus size={26} />
-          Add Warranty
-        </button>
+          <button
+            key={action.title}
+            onClick={() => navigate(action.path)}
+            className={`${action.color} text-white rounded-xl p-5 hover:scale-105 transition duration-200 flex flex-col items-center gap-3`}
+          >
+            {action.icon}
 
-        <button className="bg-orange-500 hover:bg-orange-600 text-white rounded-xl p-4 flex flex-col items-center gap-2">
-          <Wrench size={26} />
-          Book Service
-        </button>
+            <span className="font-semibold">
+              {action.title}
+            </span>
 
-        <button className="bg-red-500 hover:bg-red-600 text-white rounded-xl p-4 flex flex-col items-center gap-2">
-          <Bell size={26} />
-          View Alerts
-        </button>
+          </button>
+
+        ))}
 
       </div>
+
     </div>
   );
 };

@@ -3,8 +3,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { addProduct } from "../../services/productService";
 
+
 export default function AddProduct() {
   const [loading, setLoading] = useState(false);
+const [file, setFile] = useState(null);
 
   const {
     register,
@@ -22,11 +24,12 @@ export default function AddProduct() {
         price: Number(data.price),
       };
 
-      const response = await addProduct(payload);
+      const response = await addProduct(payload, file);
 
       toast.success(response.message || "Product Added Successfully");
 
       reset();
+        setFile(null);
     } catch (error) {
       toast.error(
         error.response?.data?.message || "Failed to Add Product"
@@ -44,10 +47,7 @@ export default function AddProduct() {
           Add Product
         </h1>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
-        >
+        <form onSubmit={handleSubmit(onSubmit)}>
 
           {/* Product Name */}
           <div>
@@ -163,6 +163,27 @@ export default function AddProduct() {
               {errors.price?.message}
             </p>
           </div>
+
+          {/* Invoice Upload */}
+
+<div>
+  <label className="font-medium">
+    Invoice / Product Image
+  </label>
+
+  <input
+    type="file"
+    accept="image/*,.pdf"
+    onChange={(e) => setFile(e.target.files[0])}
+    className="w-full border rounded-lg p-2 mt-2"
+  />
+
+  {file && (
+    <p className="text-green-600 text-sm mt-2">
+      Selected File: {file.name}
+    </p>
+  )}
+</div>
 
           {/* Submit Button */}
           <div className="md:col-span-2">

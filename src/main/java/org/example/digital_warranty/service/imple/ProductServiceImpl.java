@@ -33,7 +33,6 @@ public class ProductServiceImpl implements ProductService {
             ProductRequest request,
             MultipartFile invoice,
             String email) {
-
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
@@ -84,9 +83,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse updateProduct(Long id,
-                                         ProductRequest request,
-                                         String email) {
+    public ProductResponse updateProduct(
+            Long id,
+            ProductRequest request,
+            MultipartFile file,
+            String email) {
 
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
@@ -152,7 +153,8 @@ public class ProductServiceImpl implements ProductService {
 
         Page<Product> productPage =
                 productRepository.findByUserEmail(email, pageable);
-
+        System.out.println("Products found: " + productPage.getTotalElements());
+        System.out.println("Content size: " + productPage.getContent().size());
         return ProductPageResponse.builder()
                 .products(
                         productPage.getContent()

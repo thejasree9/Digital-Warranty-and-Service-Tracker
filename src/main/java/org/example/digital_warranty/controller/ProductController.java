@@ -8,9 +8,11 @@ import org.example.digital_warranty.dto.response.ApiResponse;
 import org.example.digital_warranty.dto.response.ProductPageResponse;
 import org.example.digital_warranty.service.ProductService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,14 +23,15 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<ProductResponse>> addProduct(
-            @Valid @RequestBody ProductRequest request,
+            @RequestPart("product") @Valid ProductRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file,
             Authentication authentication) {
 
         ProductResponse response = productService.addProduct(
                 request,
-                null,
+                file,
                 authentication.getName()
         );
 
@@ -49,6 +52,9 @@ public class ProductController {
             @RequestParam(defaultValue = "productName") String sortBy,
             @RequestParam(defaultValue = "asc") String direction,
             Authentication authentication) {
+        System.out.println("==================================");
+        System.out.println("Logged in user: " + authentication.getName());
+        System.out.println("==================================");
 
         ProductPageResponse response = productService.getAllProducts(
                 page,
@@ -118,15 +124,20 @@ public class ProductController {
         );
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(
+            value = "/{id}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
     public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(
             @PathVariable Long id,
-            @Valid @RequestBody ProductRequest request,
+            @RequestPart("product") @Valid ProductRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file,
             Authentication authentication) {
 
         ProductResponse response = productService.updateProduct(
                 id,
                 request,
+                file,
                 authentication.getName()
         );
 

@@ -8,6 +8,8 @@ import {
   CartesianGrid,
 } from "recharts";
 
+import { useTheme } from "../../context/ThemeContext";
+
 const data = [
   { month: "Jan", products: 8 },
   { month: "Feb", products: 12 },
@@ -18,10 +20,12 @@ const data = [
 ];
 
 const ProductChart = () => {
-  return (
-    <div className="bg-white rounded-2xl shadow-md p-6">
+  const { darkMode } = useTheme();
 
-      <h2 className="text-xl font-semibold mb-4">
+  return (
+    <div className="bg-white dark:bg-slate-900 border border-gray-100 dark:border-slate-700 rounded-2xl shadow-md p-6 transition-all duration-300">
+
+      <h2 className="text-xl font-semibold mb-4 text-slate-800 dark:text-white">
         Monthly Products Added
       </h2>
 
@@ -29,13 +33,28 @@ const ProductChart = () => {
 
         <BarChart data={data}>
 
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke={darkMode ? "#475569" : "#e5e7eb"}
+          />
 
-          <XAxis dataKey="month" />
+          <XAxis
+            dataKey="month"
+            stroke={darkMode ? "#ffffff" : "#475569"}
+          />
 
-          <YAxis />
+          <YAxis
+            stroke={darkMode ? "#ffffff" : "#475569"}
+          />
 
-          <Tooltip />
+          <Tooltip
+            contentStyle={{
+              backgroundColor: darkMode ? "#0f172a" : "#ffffff",
+              border: "none",
+              borderRadius: "10px",
+              color: darkMode ? "#ffffff" : "#000000",
+            }}
+          />
 
           <Bar
             dataKey="products"

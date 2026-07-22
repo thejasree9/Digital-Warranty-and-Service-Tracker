@@ -53,23 +53,32 @@ const Sidebar = () => {
     <aside
       className={`${
         collapsed ? "w-20" : "w-60"
-      } min-h-screen bg-slate-900 text-white transition-all duration-300 flex flex-col`}
+      } min-h-screen
+      bg-white dark:bg-slate-900
+      border-r border-gray-200 dark:border-slate-700
+      text-slate-800 dark:text-white
+      transition-all duration-300 flex flex-col`}
     >
       {/* Logo + Toggle */}
-      <div className="flex items-center justify-between px-4 py-5 border-b border-slate-700">
+      <div className="flex items-center justify-between px-4 py-5 border-b border-gray-200 dark:border-slate-700">
         {!collapsed && (
           <h1 className="text-xl font-bold flex items-center gap-2">
-            <ShieldCheck className="text-blue-400" size={24} />
+            <ShieldCheck
+              className="text-blue-600 dark:text-blue-400"
+              size={24}
+            />
             <span>
               Warranty
-              <span className="text-blue-400">Tracker</span>
+              <span className="text-blue-600 dark:text-blue-400">
+                Tracker
+              </span>
             </span>
           </h1>
         )}
 
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-2 rounded-lg hover:bg-slate-800 transition"
+          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors duration-300"
         >
           <Menu size={20} />
         </button>
@@ -84,10 +93,10 @@ const Sidebar = () => {
             className={({ isActive }) =>
               `flex items-center ${
                 collapsed ? "justify-center" : "gap-3"
-              } px-4 py-3 rounded-xl mb-2 transition-all duration-200 ${
+              } px-4 py-3 rounded-xl mb-2 transition-all duration-300 ${
                 isActive
                   ? "bg-blue-600 text-white"
-                  : "text-slate-300 hover:bg-slate-800"
+                  : "text-slate-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-800"
               }`
             }
           >
@@ -103,12 +112,12 @@ const Sidebar = () => {
       </nav>
 
       {/* Logout */}
-      <div className="p-4 border-t border-slate-700">
+      <div className="p-4 border-t border-gray-200 dark:border-slate-700">
         <button
           onClick={logout}
           className={`w-full flex items-center ${
             collapsed ? "justify-center" : "justify-center gap-3"
-          } px-4 py-3 rounded-xl bg-red-500 hover:bg-red-600 transition`}
+          } px-4 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white transition-all duration-300`}
         >
           <LogOut size={20} />
 

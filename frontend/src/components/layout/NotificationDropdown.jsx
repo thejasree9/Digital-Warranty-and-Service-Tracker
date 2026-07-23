@@ -29,7 +29,7 @@ const NotificationDropdown = ({ onClose, setUnreadCount }) => {
       setNotifications((prev) =>
         prev.map((notification) =>
           notification.id === notificationId
-            ? { ...notification, isRead: true }
+           ? { ...notification, read: true }
             : notification
         )
       );
@@ -62,7 +62,7 @@ const NotificationDropdown = ({ onClose, setUnreadCount }) => {
                 handleNotificationClick(notification.id)
               }
               className={`p-4 border-b dark:border-slate-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-800 transition ${
-                !notification.isRead
+                !notification.read
                   ? "bg-blue-50 dark:bg-slate-800"
                   : ""
               }`}

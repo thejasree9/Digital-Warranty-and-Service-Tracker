@@ -24,6 +24,7 @@ export default function Notifications() {
   const loadNotifications = async () => {
     try {
       const data = await getNotifications();
+      console.log("Notifications:", data);
       setNotifications(data);
     } catch (error) {
       console.error("Error loading notifications", error);
@@ -39,7 +40,7 @@ export default function Notifications() {
       setNotifications((prev) =>
         prev.map((notification) =>
           notification.id === id
-            ? { ...notification, isRead: true }
+            ? { ...notification, read: true }
             : notification
         )
       );
@@ -55,7 +56,7 @@ export default function Notifications() {
       setNotifications((prev) =>
         prev.map((notification) => ({
           ...notification,
-          isRead: true,
+          read: true,
         }))
       );
     } catch (error) {
@@ -77,14 +78,16 @@ export default function Notifications() {
 
   return (
     <div className="p-6 min-h-screen bg-gray-50 dark:bg-slate-900">
-      {/* Header */}
+
       <div className="flex justify-between items-center mb-8">
         <div className="flex items-center gap-3">
           <Bell className="text-blue-600" size={28} />
+
           <div>
             <h1 className="text-3xl font-bold dark:text-white">
               Notifications
             </h1>
+
             <p className="text-gray-500 dark:text-gray-400">
               Stay updated with your latest activities
             </p>
@@ -94,7 +97,7 @@ export default function Notifications() {
         {notifications.length > 0 && (
           <button
             onClick={handleMarkAllRead}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
           >
             <CheckCheck size={18} />
             Mark All Read
@@ -102,10 +105,11 @@ export default function Notifications() {
         )}
       </div>
 
-      {/* Loading */}
       {loading ? (
         <div className="text-center py-20">
-          <p className="text-lg text-gray-500">Loading notifications...</p>
+          <p className="text-lg text-gray-500">
+            Loading notifications...
+          </p>
         </div>
       ) : notifications.length === 0 ? (
         <div className="bg-white dark:bg-slate-800 rounded-xl shadow p-12 text-center">
@@ -113,9 +117,11 @@ export default function Notifications() {
             size={60}
             className="mx-auto text-gray-400 mb-4"
           />
+
           <h2 className="text-2xl font-semibold dark:text-white">
             No Notifications
           </h2>
+
           <p className="text-gray-500 mt-2">
             You're all caught up.
           </p>
@@ -125,17 +131,18 @@ export default function Notifications() {
           {notifications.map((notification) => (
             <div
               key={notification.id}
-              className={`rounded-xl shadow-lg p-5 border transition-all
-              ${
-                notification.isRead
+              className={`rounded-xl shadow-lg p-5 border transition-all ${
+                notification.read
                   ? "bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700"
                   : "bg-blue-50 dark:bg-slate-700 border-blue-500"
               }`}
             >
               <div className="flex justify-between">
+
                 <div className="flex gap-4 flex-1">
+
                   <div>
-                    {notification.isRead ? (
+                    {notification.read ? (
                       <CheckCircle
                         className="text-green-500 mt-1"
                         size={28}
@@ -162,10 +169,12 @@ export default function Notifications() {
                       {new Date(notification.createdAt).toLocaleString()}
                     </div>
                   </div>
+
                 </div>
 
                 <div className="flex gap-2 ml-4">
-                  {!notification.isRead && (
+
+                  {!notification.read && (
                     <button
                       onClick={() =>
                         handleMarkAsRead(notification.id)
@@ -184,7 +193,9 @@ export default function Notifications() {
                   >
                     <Trash2 size={18} />
                   </button>
+
                 </div>
+
               </div>
             </div>
           ))}

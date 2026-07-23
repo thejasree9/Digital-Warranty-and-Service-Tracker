@@ -24,4 +24,7 @@ public class WarrantyRequest {
     private String provider;
 
     private String terms;
+
+    // Warranty card file path / URL
+    private String warrantyCardUrl;
 }

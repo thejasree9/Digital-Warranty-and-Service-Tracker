@@ -16,7 +16,6 @@ public class Warranty {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
 
     private LocalDate startDate;
@@ -30,6 +29,9 @@ public class Warranty {
     @Column(length = 1000)
     private String terms;
 
+    // Warranty Card (PDF/Image URL)
+    private String warrantyCardUrl;
+
     @Column(nullable = false)
     @Builder.Default
     private boolean reminderSent = false;
@@ -37,4 +39,5 @@ public class Warranty {
     @OneToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
 }

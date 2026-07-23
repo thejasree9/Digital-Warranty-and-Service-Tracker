@@ -9,22 +9,26 @@ import org.example.digital_warranty.exception.ResourceNotFoundException;
 import org.example.digital_warranty.exception.UnauthorizedException;
 import org.example.digital_warranty.repository.ProductRepository;
 import org.example.digital_warranty.repository.WarrantyRepository;
+import org.example.digital_warranty.service.CloudinaryService;
 import org.example.digital_warranty.service.WarrantyService;
 import org.springframework.stereotype.Service;
 import org.example.digital_warranty.service.NotificationService;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class WarrantyServiceImpl implements WarrantyService {
-
     private final WarrantyRepository warrantyRepository;
-    private final ProductRepository productRepository;
-    private final NotificationService notificationService;
 
+    private final ProductRepository productRepository;
+
+    private final CloudinaryService cloudinaryService;
+
+    private final NotificationService notificationService;
     @Override
-    public WarrantyResponse addWarranty(WarrantyRequest request,
+    public WarrantyResponse addWarranty(WarrantyRequest request, MultipartFile file,
                                         String email) {
 
         Product product = productRepository.findById(request.getProductId())
@@ -32,6 +36,25 @@ public class WarrantyServiceImpl implements WarrantyService {
 
         if (!product.getUser().getEmail().equals(email))
             throw new UnauthorizedException("Unauthorized");
+        // Check if warranty already exists for this product
+        if (warrantyRepository.findByProductId(request.getProductId()).isPresent()) {
+
+            throw new IllegalArgumentException(
+                    "Warranty already exists for this product. Please edit the existing warranty."
+            );
+
+        }
+        String warrantyCardUrl = null;
+
+        if (file != null && !file.isEmpty()) {
+
+            warrantyCardUrl = cloudinaryService.uploadFile(file);
+
+        } else if (request.getWarrantyCardUrl() != null) {
+
+            warrantyCardUrl = request.getWarrantyCardUrl();
+
+        }
 
         Warranty warranty = Warranty.builder()
                 .startDate(request.getStartDate())
@@ -39,9 +62,9 @@ public class WarrantyServiceImpl implements WarrantyService {
                 .warrantyType(request.getWarrantyType())
                 .provider(request.getProvider())
                 .terms(request.getTerms())
+                .warrantyCardUrl(warrantyCardUrl)
                 .product(product)
                 .build();
-
         warranty = warrantyRepository.save(warranty);
         notificationService.createNotification(
                 product.getUser(),
@@ -69,9 +92,11 @@ public class WarrantyServiceImpl implements WarrantyService {
     }
 
     @Override
-    public WarrantyResponse updateWarranty(Long productId,
-                                           WarrantyRequest request,
-                                           String email) {
+    public WarrantyResponse updateWarranty(
+            Long productId,
+            WarrantyRequest request,
+            MultipartFile file,
+            String email) {
 
         Warranty warranty = warrantyRepository.findByProductId(productId)
                 .orElseThrow();
@@ -84,7 +109,20 @@ public class WarrantyServiceImpl implements WarrantyService {
         warranty.setWarrantyType(request.getWarrantyType());
         warranty.setProvider(request.getProvider());
         warranty.setTerms(request.getTerms());
+        if (file != null && !file.isEmpty()) {
 
+            String warrantyCardUrl =
+                    cloudinaryService.uploadFile(file);
+
+            warranty.setWarrantyCardUrl(warrantyCardUrl);
+
+        } else if (request.getWarrantyCardUrl() != null) {
+
+            warranty.setWarrantyCardUrl(
+                    request.getWarrantyCardUrl()
+            );
+
+        }
         Warranty updatedWarranty = warrantyRepository.save(warranty);
 
         notificationService.createNotification(
@@ -128,6 +166,7 @@ public class WarrantyServiceImpl implements WarrantyService {
                 .warrantyType(warranty.getWarrantyType())
                 .provider(warranty.getProvider())
                 .terms(warranty.getTerms())
+                .warrantyCardUrl(warranty.getWarrantyCardUrl())
                 .build();
     }
     @Override

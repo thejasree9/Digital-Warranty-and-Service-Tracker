@@ -25,4 +25,7 @@ public class WarrantyResponse {
 
     private String terms;
 
+    // Warranty Card URL
+    private String warrantyCardUrl;
+
 }

@@ -5,11 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.example.digital_warranty.dto.WarrantyRequest;
 import org.example.digital_warranty.dto.WarrantyResponse;
 import org.example.digital_warranty.dto.response.ApiResponse;
+import org.example.digital_warranty.service.CloudinaryService;
 import org.example.digital_warranty.service.WarrantyService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -19,16 +22,25 @@ import java.util.List;
 public class WarrantyController {
 
     private final WarrantyService warrantyService;
-
-    @PostMapping
+    private final CloudinaryService cloudinaryService;
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<WarrantyResponse>> add(
-            @Valid @RequestBody WarrantyRequest request,
-            Authentication authentication) {
 
-        WarrantyResponse response = warrantyService.addWarranty(
-                request,
-                authentication.getName()
-        );
+            @RequestPart("warranty")
+            @Valid WarrantyRequest request,
+
+            @RequestPart(value = "file", required = false)
+            MultipartFile file,
+
+            Authentication authentication
+    ) {
+
+        WarrantyResponse response =
+                warrantyService.addWarranty(
+                        request,
+                        file,
+                        authentication.getName()
+                );
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(
@@ -42,13 +54,17 @@ public class WarrantyController {
 
     @GetMapping("/{productId}")
     public ResponseEntity<ApiResponse<WarrantyResponse>> get(
-            @PathVariable Long productId,
-            Authentication authentication) {
 
-        WarrantyResponse response = warrantyService.getWarranty(
-                productId,
-                authentication.getName()
-        );
+            @PathVariable Long productId,
+
+            Authentication authentication
+    ) {
+
+        WarrantyResponse response =
+                warrantyService.getWarranty(
+                        productId,
+                        authentication.getName()
+                );
 
         return ResponseEntity.ok(
                 ApiResponse.<WarrantyResponse>builder()
@@ -59,17 +75,30 @@ public class WarrantyController {
         );
     }
 
-    @PutMapping("/{productId}")
+    @PutMapping(
+            value="/{productId}",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
     public ResponseEntity<ApiResponse<WarrantyResponse>> update(
-            @PathVariable Long productId,
-            @Valid @RequestBody WarrantyRequest request,
-            Authentication authentication) {
 
-        WarrantyResponse response = warrantyService.updateWarranty(
-                productId,
-                request,
-                authentication.getName()
-        );
+            @PathVariable Long productId,
+
+            @RequestPart("warranty")
+            @Valid WarrantyRequest request,
+
+            @RequestPart(value = "file", required = false)
+            MultipartFile file,
+
+            Authentication authentication
+    ) {
+
+        WarrantyResponse response =
+                warrantyService.updateWarranty(
+                        productId,
+                        request,
+                        file,
+                        authentication.getName()
+                );
 
         return ResponseEntity.ok(
                 ApiResponse.<WarrantyResponse>builder()
@@ -82,8 +111,11 @@ public class WarrantyController {
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<ApiResponse<String>> delete(
+
             @PathVariable Long productId,
-            Authentication authentication) {
+
+            Authentication authentication
+    ) {
 
         warrantyService.deleteWarranty(
                 productId,
@@ -98,12 +130,17 @@ public class WarrantyController {
                         .build()
         );
     }
+
     @GetMapping
     public ResponseEntity<ApiResponse<List<WarrantyResponse>>> getAll(
-            Authentication authentication) {
+
+            Authentication authentication
+    ) {
 
         List<WarrantyResponse> response =
-                warrantyService.getAllWarranties(authentication.getName());
+                warrantyService.getAllWarranties(
+                        authentication.getName()
+                );
 
         return ResponseEntity.ok(
                 ApiResponse.<List<WarrantyResponse>>builder()

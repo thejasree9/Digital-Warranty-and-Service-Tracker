@@ -123,9 +123,9 @@ export default function AddService() {
 
   return (
 
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen bg-gray-100 dark:bg-slate-900 p-8 transition-colors duration-300">
 
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-md p-8">
+      <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-2xl shadow-md p-8 transition-colors duration-300">
 
         {/* Header */}
 
@@ -133,13 +133,13 @@ export default function AddService() {
 
           <div>
 
-            <h1 className="text-3xl font-bold">
+            <h1 className="text-3xl font-bold text-slate-800 dark:text-white">
 
               Add Service History
 
             </h1>
 
-            <p className="text-gray-500 mt-2">
+            <p className="text-gray-500 dark:text-slate-400 mt-2">
 
               Record a maintenance or repair for your product.
 
@@ -171,7 +171,7 @@ export default function AddService() {
 
           <div>
 
-            <label className="block mb-2 font-semibold">
+            <label className="block mb-2 font-semibold text-slate-700 dark:text-slate-300">
 
               Select Product
 
@@ -181,7 +181,7 @@ export default function AddService() {
               name="productId"
               value={formData.productId}
               onChange={handleChange}
-              className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
             >
 
               <option value="">
@@ -211,7 +211,7 @@ export default function AddService() {
 
           <div>
 
-            <label className="block mb-2 font-semibold">
+            <label className="block mb-2 font-semibold text-slate-700 dark:text-slate-300">
 
               Service Date
 
@@ -231,7 +231,7 @@ export default function AddService() {
 
           <div>
 
-            <label className="block mb-2 font-semibold">
+            <label className="block mb-2 font-semibold text-slate-700 dark:text-slate-300">
 
               Service Center
 
@@ -252,7 +252,7 @@ export default function AddService() {
 
           <div>
 
-            <label className="block mb-2 font-semibold">
+            <label className="block mb-2 font-semibold text-slate-700 dark:text-slate-300">
 
               Service Description
 
@@ -275,7 +275,7 @@ export default function AddService() {
 
             <div>
 
-              <label className="block mb-2 font-semibold">
+              <label className="block mb-2 font-semibold text-slate-700 dark:text-slate-300">
 
                 Service Cost
 
@@ -294,7 +294,7 @@ export default function AddService() {
 
             <div>
 
-              <label className="block mb-2 font-semibold">
+              <label className="block mb-2 font-semibold text-slate-700 dark:text-slate-300">
 
                 Technician Name
 
@@ -319,7 +319,7 @@ export default function AddService() {
 
 <div>
 
-  <label className="block mb-2 font-semibold">
+  <label className="block mb-2 font-semibold text-slate-700 dark:text-slate-300">
 
     Upload Invoice (PDF/Image)
 
@@ -329,7 +329,7 @@ export default function AddService() {
     type="file"
     accept=".pdf,.jpg,.jpeg,.png"
     onChange={(e) => setFile(e.target.files[0])}
-    className="w-full border rounded-xl p-3"
+    className="w-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl p-3"
   />
 
 </div>
@@ -338,7 +338,7 @@ export default function AddService() {
 
           <div>
 
-            <label className="block mb-2 font-semibold">
+            <label className="block mb-2 font-semibold text-slate-700 dark:text-slate-300">
 
               Notes
 
@@ -350,7 +350,7 @@ export default function AddService() {
               value={formData.notes}
               onChange={handleChange}
               placeholder="Any additional service details..."
-              className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+             className="w-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             />
 
           </div>
@@ -361,7 +361,7 @@ export default function AddService() {
             <button
               type="button"
               onClick={() => navigate("/services")}
-              className="px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-100 transition"
+              className="px-6 py-3 rounded-xl border border-gray-300 dark:border-slate-600 text-slate-700 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-700 transition"
             >
               Cancel
             </button>

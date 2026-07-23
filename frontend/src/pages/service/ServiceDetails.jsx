@@ -41,7 +41,7 @@ export default function ServiceDetails() {
 
     return (
 
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen bg-gray-100 dark:bg-slate-900 text-slate-800 dark:text-white transition-colors duration-300">
 
         Loading...
 
@@ -53,13 +53,13 @@ export default function ServiceDetails() {
 
   return (
 
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen bg-gray-100 dark:bg-slate-900 p-8 transition-colors duration-300">
 
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+      <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 transition-colors duration-300">
 
         <div className="flex justify-between items-center mb-8">
 
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-3xl font-bold text-slate-800 dark:text-white">
 
             Service Details
 
@@ -96,13 +96,13 @@ export default function ServiceDetails() {
 
           <div>
 
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
 
               Product
 
             </p>
 
-            <p className="font-semibold text-lg">
+            <p className="font-semibold text-lg text-slate-800 dark:text-white">
 
               {service.productName}
 
@@ -114,13 +114,13 @@ export default function ServiceDetails() {
 
           <div>
 
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
 
               Service Center
 
             </p>
 
-            <p className="font-semibold text-lg">
+            <p className="font-semibold text-lg text-slate-800 dark:text-white">
 
               {service.serviceCenter}
 
@@ -132,13 +132,13 @@ export default function ServiceDetails() {
 
           <div>
 
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
 
               Service Date
 
             </p>
 
-            <p className="font-semibold text-lg">
+            <p className="font-semibold text-lg text-slate-800 dark:text-white">
 
               {service.serviceDate}
 
@@ -150,13 +150,13 @@ export default function ServiceDetails() {
 
           <div>
 
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
 
               Service Cost
 
             </p>
 
-            <p className="font-semibold text-lg text-green-600">
+            <p className="font-semibold text-lg text-green-600 dark:text-green-400">
 
               ₹ {service.cost}
 
@@ -168,13 +168,13 @@ export default function ServiceDetails() {
 
           <div>
 
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
 
               Technician
 
             </p>
 
-            <p className="font-semibold text-lg">
+            <p className="font-semibold text-lg text-slate-800 dark:text-white">
 
               {service.technicianName || "-"}
 
@@ -186,13 +186,13 @@ export default function ServiceDetails() {
 
           <div>
 
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
 
               Description
 
             </p>
 
-            <p className="font-semibold text-lg">
+            <p className="font-semibold text-lg text-slate-800 dark:text-white">
 
               {service.description}
 
@@ -204,7 +204,7 @@ export default function ServiceDetails() {
 
           <div className="md:col-span-2">
 
-            <p className="text-gray-500 text-sm mb-2">
+            <p className="text-gray-500 dark:text-gray-400 text-sm mb-2">
 
               Invoice
 
@@ -216,7 +216,7 @@ export default function ServiceDetails() {
                 href={service.invoiceUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 underline"
+                className="text-blue-600 dark:text-blue-400 underline hover:text-blue-700 dark:hover:text-blue-300"
               >
 
                 View Invoice
@@ -225,7 +225,7 @@ export default function ServiceDetails() {
 
             ) : (
 
-              <p className="text-gray-500">
+              <p className="text-gray-500 dark:text-gray-400">
 
                 No invoice uploaded.
 
@@ -239,13 +239,13 @@ export default function ServiceDetails() {
 
           <div className="md:col-span-2">
 
-            <p className="text-gray-500 text-sm mb-2">
+            <p className="text-gray-500 dark:text-gray-400 text-sm mb-2">
 
               Notes
 
             </p>
 
-            <div className="bg-gray-50 border rounded-xl p-4 whitespace-pre-wrap">
+            <div className="bg-gray-50 dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-xl p-4 whitespace-pre-wrap text-slate-700 dark:text-slate-200">
 
               {service.notes || "No notes available."}
 

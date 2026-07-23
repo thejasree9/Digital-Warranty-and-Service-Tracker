@@ -57,9 +57,9 @@ export default function EditProduct() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex justify-center py-10">
-      <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-3xl">
-        <h1 className="text-3xl font-bold mb-8">Edit Product</h1>
+    <div className="min-h-screen bg-gray-100 dark:bg-slate-900 flex justify-center py-10 transition-colors duration-300">
+      <div className="bg-white dark:bg-slate-800 shadow-lg rounded-xl p-8 w-full max-w-3xl transition-colors duration-300">
+        <h1 className="text-3xl font-bold mb-8 text-slate-800 dark:text-white">Edit Product</h1>
 
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -68,13 +68,13 @@ export default function EditProduct() {
           <input
             {...register("productName", { required: true })}
             placeholder="Product Name"
-            className="border p-2 rounded"
+            className="border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white rounded p-2 focus:ring-2 focus:ring-blue-500 outline-none"
           />
 
           <input
             {...register("brand", { required: true })}
             placeholder="Brand"
-            className="border p-2 rounded"
+           className="border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white rounded p-2 focus:ring-2 focus:ring-blue-500 outline-none"
           />
 
           <input

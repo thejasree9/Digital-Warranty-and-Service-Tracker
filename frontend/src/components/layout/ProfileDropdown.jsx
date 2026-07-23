@@ -1,4 +1,4 @@
-import { User, Bell, Lock, LogOut } from "lucide-react";
+import { User, Bell, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
@@ -13,10 +13,10 @@ const ProfileDropdown = ({ user, onClose }) => {
 };
 
   return (
-    <div className="absolute right-0 mt-3 w-64 bg-white rounded-xl shadow-xl border border-gray-200 z-50">
-      <div className="p-4 border-b">
-        <h3 className="font-semibold text-gray-800">{user?.name}</h3>
-        <p className="text-sm text-gray-500">{user?.role}</p>
+    <div className="absolute right-0 mt-3 w-64 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-gray-200 dark:border-slate-700 z-50 transition-colors duration-300">
+      <div className="p-4 border-b border-gray-200 dark:border-slate-700">
+        <h3 className="font-semibold text-gray-800 dark:text-white">{user?.name}</h3>
+        <p className="text-sm text-gray-500 dark:text-slate-400">{user?.role}</p>
       </div>
 
       <button
@@ -24,7 +24,7 @@ const ProfileDropdown = ({ user, onClose }) => {
   onClose();
   navigate("/profile");
 }}
-        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100"
+        className="w-full flex items-center gap-3 px-4 py-3 text-slate-700 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-700 transition"
       >
         <User size={18} />
         My Profile
@@ -35,26 +35,16 @@ const ProfileDropdown = ({ user, onClose }) => {
   onClose();
   navigate("/notifications");
 }}
-        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100"
+       className="w-full flex items-center gap-3 px-4 py-3 text-slate-700 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-700 transition"
       >
         <Bell size={18} />
         Notifications
       </button>
 
-      <button
-        onClick={() => {
-  onClose();
-  navigate("/change-password");
-}}
-        className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gray-100"
-      >
-        <Lock size={18} />
-        Change Password
-      </button>
 
       <button
         onClick={handleLogout}
-        className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-b-xl"
+        className="w-full flex items-center gap-3 px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-b-xl transition"
       >
         <LogOut size={18} />
         Logout

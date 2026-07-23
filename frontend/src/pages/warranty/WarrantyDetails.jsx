@@ -238,7 +238,44 @@ export default function WarrantyDetails() {
         </div>
 
       </div>
+      {/* Warranty Card */}
+{/* Warranty Card */}
 
+<div className="md:col-span-2 mt-6">
+
+  <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-4">
+
+    Warranty Card
+
+  </h3>
+
+  {warranty.warrantyCardUrl ? (
+
+    <div className="rounded-2xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 p-6">
+
+      <img
+        src={warranty.warrantyCardUrl}
+        alt="Warranty Card"
+        className="mx-auto max-h-[500px] rounded-xl shadow-lg object-contain"
+      />
+
+    </div>
+
+  ) : (
+
+    <div className="rounded-2xl border-2 border-dashed border-gray-300 dark:border-slate-600 p-10 text-center">
+
+      <p className="text-gray-500">
+
+        No Warranty Card Uploaded
+
+      </p>
+
+    </div>
+
+  )}
+
+</div>
     </div>
 
   );

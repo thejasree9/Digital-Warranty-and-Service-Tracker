@@ -93,13 +93,27 @@ export default function ServiceList() {
 
 };
 
-  const filteredServices = services.filter((service) =>
+ const filteredServices = services.filter((service) => {
 
-    service.productName
-      ?.toLowerCase()
-      .includes(search.toLowerCase())
+  const value = search.toLowerCase().trim();
+
+  return (
+
+    service.productName?.toLowerCase().includes(value) ||
+
+    service.serviceCenter?.toLowerCase().includes(value) ||
+
+    service.technicianName?.toLowerCase().includes(value) ||
+
+    service.description?.toLowerCase().includes(value) ||
+
+    service.serviceDate?.includes(value) ||
+
+    String(service.cost).includes(value)
 
   );
+
+});
 
   return (
 
@@ -108,81 +122,50 @@ export default function ServiceList() {
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
+{/* Header */}
 
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+<div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
 
-          <div>
+  <div>
 
-            <h1 className="text-3xl font-bold text-slate-800 dark:text-white">
+    <h1 className="text-3xl font-bold text-slate-800 dark:text-white">
 
-              Service History
+      Service History
 
-            </h1>
+    </h1>
 
-            <p className="text-gray-500 dark:text-slate-400 mt-2">
+    <p className="text-gray-500 dark:text-slate-400 mt-2">
 
-              Track all product service records.
+      Manage all your service records in one place.
 
-            </p>
+    </p>
 
-          </div>
+  </div>
 
-          <button
+  <button
+    onClick={() => navigate("/services/add")}
+    className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition"
+  >
+    <Plus size={20} />
+    Add Service
+  </button>
 
-            onClick={() => navigate("/services/add")}
+</div>
 
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl transition"
+{/* Search */}
 
-          >
+<div className="mb-8">
 
-            <Plus size={20} />
+  <input
+    type="text"
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+    placeholder="Search by Product Name, Service Center, Technician, Description, Cost or Service Date..."
+    className="w-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-800 dark:text-white rounded-xl px-5 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+  />
 
-            Add Service
 
-          </button>
-
-        </div>
-
-        {/* Search */}
-
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-md p-5 mb-8 transition-colors duration-300">
-
-          <div className="flex flex-col md:flex-row gap-4">
-
-            <div className="relative flex-1">
-
-              <Search
-                size={18}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-              />
-
-              <input
-                type="text"
-                placeholder="Search by Product..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-               className="w-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl pl-11 pr-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
-              />
-
-            </div>
-
-            <button
-
-              onClick={loadServices}
-
-              className="flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white px-6 rounded-xl"
-
-            >
-
-              <RefreshCcw size={18} />
-
-              Refresh
-
-            </button>
-
-          </div>
-
-        </div>
+</div>
                 {/* Service Table */}
 
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-md overflow-hidden overflow-x-auto transition-colors duration-300">

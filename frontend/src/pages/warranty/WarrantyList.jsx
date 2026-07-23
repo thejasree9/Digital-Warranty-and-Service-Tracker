@@ -103,7 +103,7 @@ export default function WarrantyList() {
 
   return (
 
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen bg-gray-100 dark:bg-slate-900 p-8 transition-colors duration-300">
 
       <div className="max-w-7xl mx-auto">
 
@@ -113,13 +113,13 @@ export default function WarrantyList() {
 
           <div>
 
-            <h1 className="text-3xl font-bold text-slate-800">
+            <h1 className="text-3xl font-bold text-slate-800 dark:text-white">
 
               Warranty Management
 
             </h1>
 
-            <p className="text-gray-500 mt-2">
+            <p className="text-gray-500 dark:text-slate-400 mt-2">
 
               Manage all warranties in one place.
 
@@ -145,7 +145,7 @@ export default function WarrantyList() {
 
         {/* Search Card */}
 
-        <div className="bg-white rounded-2xl shadow-md p-5 mb-8">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-md p-5 mb-8 transition-colors duration-300">
 
           <div className="flex flex-col md:flex-row gap-4">
 
@@ -161,7 +161,7 @@ export default function WarrantyList() {
                 placeholder="Search by Product Name..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="w-full border rounded-xl pl-11 pr-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl pl-11 pr-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
               />
 
             </div>
@@ -185,7 +185,7 @@ export default function WarrantyList() {
         </div>
                 {/* Warranty Table */}
 
-        <div className="bg-white rounded-2xl shadow-md overflow-hidden overflow-x-auto">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-md overflow-hidden overflow-x-auto transition-colors duration-300">
 
           <table className="w-full">
 
@@ -219,7 +219,7 @@ export default function WarrantyList() {
 
                   <td
                     colSpan="7"
-                    className="text-center py-12 text-gray-500"
+                    className="text-center py-12 text-gray-500 dark:text-gray-400"
                   >
 
                     Loading warranties...
@@ -241,13 +241,13 @@ export default function WarrantyList() {
                         className="text-gray-300"
                       />
 
-                      <h2 className="mt-4 text-xl font-semibold text-gray-700">
+                      <h2 className="mt-4 text-xl font-semibold text-gray-700 dark:text-white">
 
                         No Warranty Found
 
                       </h2>
 
-                      <p className="text-gray-500 mt-2">
+                      <p className="text-gray-500 dark:text-gray-400 mt-2">
 
                         Add your first warranty to get started.
 
@@ -279,14 +279,14 @@ export default function WarrantyList() {
 
                   <tr
                     key={warranty.id}
-                    className="border-b hover:bg-blue-50 transition"
+                    className="border-b border-gray-200 dark:border-slate-700 hover:bg-blue-50 dark:hover:bg-slate-700 transition"
                   >
 
-                    <td className="p-4">
+                    <td className="p-4 text-slate-700 dark:text-slate-200">
 
                       <div>
 
-                        <h3 className="font-semibold">
+                        <h3 className="font-semibold text-slate-800 dark:text-white">
 
                           {warranty.productName}
 
@@ -296,25 +296,25 @@ export default function WarrantyList() {
 
                     </td>
 
-                    <td className="p-4">
+                    <td className="p-4 text-slate-700 dark:text-slate-200">
 
                       {warranty.provider}
 
                     </td>
 
-                    <td className="p-4">
+                    <td className="p-4 text-slate-700 dark:text-slate-200">
 
                       {warranty.warrantyType}
 
                     </td>
 
-                    <td className="p-4">
+                    <td className="p-4 text-slate-700 dark:text-slate-200">
 
                       {warranty.startDate}
 
                     </td>
 
-                    <td className="p-4">
+                    <td className="p-4 text-slate-700 dark:text-slate-200">
 
                       {warranty.endDate}
 
@@ -422,9 +422,9 @@ export default function WarrantyList() {
 
         {!loading && filteredWarranty.length > 0 && (
 
-          <div className="flex flex-col md:flex-row items-center justify-between mt-6 bg-white rounded-2xl shadow-md px-6 py-4">
+          <div className="flex flex-col md:flex-row items-center justify-between mt-6 bg-white dark:bg-slate-800 rounded-2xl shadow-md px-6 py-4 transition-colors duration-300">
 
-            <p className="text-gray-600 text-sm">
+            <p className="text-gray-600 dark:text-gray-300 text-sm">
 
               Showing
 

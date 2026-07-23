@@ -53,13 +53,13 @@ export default function ProductDetails() {
 
   return (
 
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen bg-gray-100 dark:bg-slate-900 p-8 transition-colors duration-300">
 
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+      <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 transition-colors duration-300">
 
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex justify-center items-center h-screen bg-gray-100 dark:bg-slate-900 text-slate-800 dark:text-white transition-colors duration-300">
 
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-3xl font-bold text-slate-800 dark:text-white">
 
             Product Details
 
@@ -89,49 +89,61 @@ export default function ProductDetails() {
 
           <div>
 
-            <p className="font-semibold">Product Name</p>
+            <p className="font-semibold text-slate-700 dark:text-slate-200">Product Name</p>
 
-            <p>{product.productName}</p>
-
-          </div>
-
-          <div>
-
-            <p className="font-semibold">Brand</p>
-
-            <p>{product.brand}</p>
+            <p className="text-slate-600 dark:text-slate-300">
+  {product.productName}
+</p>
 
           </div>
 
           <div>
 
-            <p className="font-semibold">Model</p>
+            <p className="font-semibold text-slate-700 dark:text-slate-200">Brand</p>
 
-            <p>{product.model}</p>
-
-          </div>
-
-          <div>
-
-            <p className="font-semibold">Serial Number</p>
-
-            <p>{product.serialNumber}</p>
+            <p className="text-slate-600 dark:text-slate-300">
+  {product.brand}
+</p>
 
           </div>
 
           <div>
 
-            <p className="font-semibold">Purchase Date</p>
+            <p className="font-semibold text-slate-700 dark:text-slate-200">Model</p>
 
-            <p>{product.purchaseDate}</p>
+            <p className="text-slate-600 dark:text-slate-300">
+  {product.model}
+</p>
 
           </div>
 
           <div>
 
-            <p className="font-semibold">Price</p>
+            <p className="font-semibold text-slate-700 dark:text-slate-200">Serial Number</p>
 
-            <p>₹ {product.price}</p>
+            <p className="text-slate-600 dark:text-slate-300">
+  {product.serialNumber}
+</p>
+
+          </div>
+
+          <div>
+
+            <p className="font-semibold text-slate-700 dark:text-slate-200">Purchase Date</p>
+
+            <p className="text-slate-600 dark:text-slate-300">
+  {product.purchaseDate}
+</p>
+
+          </div>
+
+          <div>
+
+            <p className="font-semibold text-slate-700 dark:text-slate-200">Price</p>
+
+            <p className="text-green-600 dark:text-green-400 font-semibold">
+  ₹ {product.price}
+</p>
 
           </div>
 
@@ -149,14 +161,16 @@ export default function ProductDetails() {
                 href={product.invoiceUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="text-blue-600 underline"
+                className="text-blue-600 dark:text-blue-400 underline hover:text-blue-700 dark:hover:text-blue-300"
               >
                 View Invoice
               </a>
 
             ) : (
 
-              <p>No Invoice Uploaded</p>
+              <p className="text-slate-500 dark:text-slate-400">
+  No Invoice Uploaded
+</p>
 
             )}
 

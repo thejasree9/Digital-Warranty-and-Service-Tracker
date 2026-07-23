@@ -154,7 +154,7 @@ export default function AddProduct() {
   };
     return (
 
-    <div className="min-h-screen bg-slate-100 p-8">
+    <div className="min-h-screen bg-slate-100 dark:bg-slate-900 p-8 transition-colors duration-300">
 
       <div className="max-w-5xl mx-auto">
 
@@ -164,13 +164,13 @@ export default function AddProduct() {
 
           <div>
 
-            <h1 className="text-3xl font-bold text-slate-800">
+            <h1 className="text-3xl font-bold text-slate-800 dark:text-white">
 
               Add Product
 
             </h1>
 
-            <p className="text-gray-500 mt-2">
+            <p className="text-gray-500 dark:text-slate-400 mt-2">
 
               Register a new product with purchase details.
 
@@ -200,7 +200,7 @@ export default function AddProduct() {
 
           onSubmit={handleSubmit}
 
-          className="bg-white rounded-2xl shadow-lg p-8"
+          className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 transition-colors duration-300"
 
         >
 
@@ -214,7 +214,7 @@ export default function AddProduct() {
 
               <div>
 
-                <label className="block mb-2 font-medium text-gray-700">
+                <label className="block mb-2 font-medium text-gray-700 dark:text-gray-300">
 
                   Product Name *
 
@@ -232,7 +232,7 @@ export default function AddProduct() {
 
                   placeholder="Dell Inspiron Laptop"
 
-                  className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
 
                 />
 
@@ -242,7 +242,7 @@ export default function AddProduct() {
 
               <div>
 
-                <label className="block mb-2 font-medium text-gray-700">
+                <label className="block mb-2 font-medium text-gray-700 dark:text-gray-300">
 
                   Brand *
 
@@ -260,7 +260,7 @@ export default function AddProduct() {
 
                   placeholder="Dell"
 
-                  className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
 
                 />
 
@@ -270,7 +270,7 @@ export default function AddProduct() {
 
               <div>
 
-                <label className="block mb-2 font-medium text-gray-700">
+                <label className="block mb-2 font-medium text-gray-700 dark:text-gray-300">
 
                   Model *
 
@@ -288,7 +288,7 @@ export default function AddProduct() {
 
                   placeholder="Inspiron 15"
 
-                  className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
 
                 />
 
@@ -298,7 +298,7 @@ export default function AddProduct() {
 
               <div>
 
-                <label className="block mb-2 font-medium text-gray-700">
+                <label className="block mb-2 font-medium text-gray-700 dark:text-gray-300">
 
                   Serial Number
 
@@ -316,7 +316,7 @@ export default function AddProduct() {
 
                   placeholder="SN123456789"
 
-                  className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
 
                 />
 
@@ -332,7 +332,7 @@ export default function AddProduct() {
 
               <div>
 
-                <label className="block mb-2 font-medium text-gray-700">
+                <label className="block mb-2 font-medium text-gray-700 dark:text-gray-300">
 
                   Purchase Date *
 
@@ -348,7 +348,7 @@ export default function AddProduct() {
 
                   onChange={handleChange}
 
-                  className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
 
                 />
 
@@ -358,7 +358,7 @@ export default function AddProduct() {
 
               <div>
 
-                <label className="block mb-2 font-medium text-gray-700">
+                <label className="block mb-2 font-medium text-gray-700 dark:text-gray-300">
 
                   Purchase Price *
 
@@ -376,7 +376,7 @@ export default function AddProduct() {
 
                   placeholder="50000"
 
-                  className="w-full border rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
+                  className="w-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none"
 
                 />
 
@@ -385,13 +385,13 @@ export default function AddProduct() {
 
               <div>
 
-                <label className="block mb-2 font-medium text-gray-700">
+                <label className="block mb-2 font-medium text-gray-700 dark:text-gray-300">
 
                   Product Invoice
 
                 </label>
 
-                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-blue-300 rounded-2xl cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition">
+                <label className="flex flex-col items-center justify-center w-full h-48 border-2 border-dashed border-blue-300 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-2xl cursor-pointer hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-slate-600 transition">
 
                   {preview ? (
 
@@ -410,13 +410,13 @@ export default function AddProduct() {
                         className="text-blue-500"
                       />
 
-                      <p className="mt-3 text-gray-600">
+                      <p className="mt-3 text-gray-600 dark:text-gray-300">
 
                         Click to upload invoice image
 
                       </p>
 
-                      <p className="text-sm text-gray-400 mt-1">
+                      <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
 
                         JPG, PNG or JPEG
 
@@ -448,7 +448,7 @@ export default function AddProduct() {
             <button
               type="button"
               onClick={() => navigate("/products")}
-              className="px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-100 transition"
+              className="px-6 py-3 rounded-xl border border-gray-300 dark:border-slate-600 text-slate-700 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-700 transition"
             >
 
               Cancel
@@ -489,21 +489,21 @@ export default function AddProduct() {
 
                 {/* Product Information */}
 
-        <div className="mt-10 border-t pt-6">
+        <div className="mt-10 border-t border-gray-200 dark:border-slate-700 pt-6">
 
-          <h2 className="text-xl font-semibold text-slate-800 mb-5">
+          <h2 className="text-xl font-semibold text-slate-800 dark:text-white mb-5">
             Product Information
           </h2>
 
           <div className="grid md:grid-cols-2 gap-6">
 
-            <div className="bg-blue-50 rounded-xl p-5">
+            <div className="bg-blue-50 dark:bg-slate-700 rounded-xl p-5">
 
-              <h3 className="font-semibold text-blue-700 mb-2">
+              <h3 className="font-semibold text-blue-700 dark:text-blue-400 mb-2">
                 💡 Tips
               </h3>
 
-              <ul className="space-y-2 text-gray-600 text-sm">
+              <ul className="space-y-2 text-gray-600 dark:text-gray-300 text-sm">
 
                 <li>• Enter the exact product name.</li>
 
@@ -517,13 +517,13 @@ export default function AddProduct() {
 
             </div>
 
-            <div className="bg-green-50 rounded-xl p-5">
+            <div className="bg-green-50 dark:bg-slate-700 rounded-xl p-5">
 
-              <h3 className="font-semibold text-green-700 mb-2">
+              <h3 className="font-semibold text-green-700 dark:text-green-400 mb-2">
                 Warranty Reminder
               </h3>
 
-              <p className="text-gray-600 text-sm leading-6">
+              <p className="text-gray-600 dark:text-gray-300 text-sm leading-6">
 
                 After adding a product, you can register its warranty
                 and receive notifications before the warranty expires.

@@ -41,7 +41,7 @@ export default function WarrantyDetails() {
 
     return (
 
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen bg-gray-100 dark:bg-slate-900 text-slate-800 dark:text-white transition-colors duration-300">
 
         Loading...
 
@@ -53,13 +53,13 @@ export default function WarrantyDetails() {
 
   return (
 
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen bg-gray-100 dark:bg-slate-900 p-8 transition-colors duration-300">
 
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8">
+      <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 transition-colors duration-300">
 
         <div className="flex justify-between items-center mb-8">
 
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-3xl font-bold text-slate-800 dark:text-white">
 
             Warranty Details
 
@@ -92,13 +92,13 @@ export default function WarrantyDetails() {
 
           <div>
 
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
 
               Product Name
 
             </p>
 
-            <p className="font-semibold text-lg">
+            <p className="font-semibold text-lg text-slate-800 dark:text-white">
 
               {warranty.productName}
 
@@ -110,13 +110,13 @@ export default function WarrantyDetails() {
 
           <div>
 
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
 
               Warranty Provider
 
             </p>
 
-            <p className="font-semibold text-lg">
+            <p className="font-semibold text-lg text-slate-800 dark:text-white">
 
               {warranty.provider}
 
@@ -128,13 +128,13 @@ export default function WarrantyDetails() {
 
           <div>
 
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
 
               Warranty Type
 
             </p>
 
-            <p className="font-semibold text-lg">
+            <p className="font-semibold text-lg text-slate-800 dark:text-white">
 
               {warranty.warrantyType}
 
@@ -146,13 +146,13 @@ export default function WarrantyDetails() {
 
           <div>
 
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
 
               Start Date
 
             </p>
 
-            <p className="font-semibold text-lg">
+            <p className="font-semibold text-lg text-slate-800 dark:text-white">
 
               {warranty.startDate}
 
@@ -164,13 +164,13 @@ export default function WarrantyDetails() {
 
           <div>
 
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
 
               End Date
 
             </p>
 
-            <p className="font-semibold text-lg">
+            <p className="font-semibold text-lg text-slate-800 dark:text-white">
 
               {warranty.endDate}
 
@@ -182,7 +182,7 @@ export default function WarrantyDetails() {
 
           <div>
 
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
 
               Status
 
@@ -227,7 +227,7 @@ export default function WarrantyDetails() {
 
             </p>
 
-            <div className="bg-gray-50 border rounded-xl p-4 whitespace-pre-wrap">
+            <div className="bg-gray-50 dark:bg-slate-700 border border-gray-300 dark:border-slate-600 rounded-xl p-4 whitespace-pre-wrap text-slate-700 dark:text-slate-200">
 
               {warranty.terms || "No terms available."}
 

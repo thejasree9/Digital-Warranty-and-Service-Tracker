@@ -117,21 +117,21 @@ export default function EditWarranty() {
 
   return (
 
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="min-h-screen bg-gray-100 dark:bg-slate-900 p-8 transition-colors duration-300">
 
-      <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-md p-8">
+      <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-2xl shadow-md p-8 transition-colors duration-300">
 
         <div className="flex items-center justify-between mb-8">
 
           <div>
 
-            <h1 className="text-3xl font-bold">
+            <h1 className="text-3xl font-bold text-slate-800 dark:text-white">
 
               Edit Warranty
 
             </h1>
 
-            <p className="text-gray-500 mt-2">
+            <p className="text-gray-500 dark:text-slate-400 mt-2">
 
               Update warranty information.
 
@@ -163,7 +163,7 @@ export default function EditWarranty() {
 
           <div>
 
-            <label className="block mb-2 font-semibold">
+            <label className="block mb-2 font-semibold text-slate-700 dark:text-slate-300">
 
               Product ID
 
@@ -173,7 +173,7 @@ export default function EditWarranty() {
               type="text"
               value={formData.productId}
               readOnly
-              className="w-full border rounded-xl p-3 bg-gray-100 cursor-not-allowed"
+             className="w-full border border-gray-300 dark:border-slate-600 bg-gray-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl p-3 cursor-not-allowed"
             />
 
           </div>
@@ -182,7 +182,7 @@ export default function EditWarranty() {
 
           <div>
 
-            <label className="block mb-2 font-semibold">
+            <label className="block mb-2 font-semibold text-slate-700 dark:text-slate-300">
 
               Warranty Provider
 
@@ -194,7 +194,7 @@ export default function EditWarranty() {
               value={formData.provider}
               onChange={handleChange}
               placeholder="Dell, HP, Samsung..."
-              className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
             />
 
           </div>
@@ -203,7 +203,7 @@ export default function EditWarranty() {
 
           <div>
 
-            <label className="block mb-2 font-semibold">
+            <label className="block mb-2 font-semibold text-slate-700 dark:text-slate-300">
 
               Warranty Type
 
@@ -242,7 +242,7 @@ export default function EditWarranty() {
 
             <div>
 
-              <label className="block mb-2 font-semibold">
+              <label className="block mb-2 font-semibold text-slate-700 dark:text-slate-300">
 
                 Start Date
 
@@ -260,7 +260,7 @@ export default function EditWarranty() {
 
             <div>
 
-              <label className="block mb-2 font-semibold">
+              <label className="block mb-2 font-semibold text-slate-700 dark:text-slate-300">
 
                 End Date
 
@@ -282,7 +282,7 @@ export default function EditWarranty() {
 
           <div>
 
-            <label className="block mb-2 font-semibold">
+            <label className="block mb-2 font-semibold text-slate-700 dark:text-slate-300">
 
               Terms & Conditions
 
@@ -294,7 +294,7 @@ export default function EditWarranty() {
               value={formData.terms}
               onChange={handleChange}
               placeholder="Enter warranty terms..."
-              className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              className="w-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
             />
 
           </div>
@@ -305,7 +305,7 @@ export default function EditWarranty() {
             <button
               type="button"
               onClick={() => navigate("/warranty")}
-              className="px-6 py-3 rounded-xl border border-gray-300 hover:bg-gray-100 transition"
+              className="px-6 py-3 rounded-xl border border-gray-300 dark:border-slate-600 text-slate-700 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-700 transition"
             >
               Cancel
             </button>

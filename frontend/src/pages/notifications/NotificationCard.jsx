@@ -27,8 +27,8 @@ export default function NotificationCard({
           </p>
 
           <p className="text-sm text-gray-400 mt-3">
-            {notification.date}
-          </p>
+  {new Date(notification.createdAt).toLocaleString()}
+</p>
 
         </div>
 
@@ -36,14 +36,14 @@ export default function NotificationCard({
 
           {!notification.read && (
 
-            <button
-              onClick={() => onRead(notification.id)}
-              className="bg-green-600 text-white px-3 rounded"
-            >
-              Read
-            </button>
+  <button
+    onClick={() => onRead(notification.id)}
+    className="bg-green-600 text-white px-3 rounded"
+  >
+    Read
+  </button>
 
-          )}
+)}
 
           <button
             onClick={() => onDelete(notification.id)}

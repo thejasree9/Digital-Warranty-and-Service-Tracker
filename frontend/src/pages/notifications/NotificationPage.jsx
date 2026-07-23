@@ -3,6 +3,7 @@ import {
   getNotifications,
 } from "../../services/notificationService";
 import NotificationCard from "./NotificationCard";
+import { markAsRead } from "../../services/notificationService";
 
 export default function NotificationPage() {
 
@@ -14,13 +15,21 @@ export default function NotificationPage() {
 
   const loadNotifications = async () => {
 
-    const response = await getNotifications();
+  const response = await getNotifications();
 
-    setNotifications(response.data);
+  console.log(response);
 
-  };
+  setNotifications(response);
 
-  const markRead = (id) => {
+};
+
+  
+
+const markRead = async (id) => {
+
+  try {
+
+    await markAsRead(id);
 
     setNotifications((prev) =>
       prev.map((n) =>
@@ -28,7 +37,13 @@ export default function NotificationPage() {
       )
     );
 
-  };
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+};
 
   const deleteItem = (id) => {
 

@@ -57,15 +57,13 @@ export default function ProductDetails() {
 
       <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8 transition-colors duration-300">
 
-        <div className="flex justify-center items-center h-screen bg-gray-100 dark:bg-slate-900 text-slate-800 dark:text-white transition-colors duration-300">
+        <div className="flex justify-between items-center mb-8">
 
-          <h1 className="text-3xl font-bold text-slate-800 dark:text-white">
+  <h1 className="text-3xl font-bold text-slate-800 dark:text-white">
+    Product Details
+  </h1>
 
-            Product Details
-
-          </h1>
-
-          <div className="flex gap-3">
+  <div className="flex gap-3">
 
             <button
               onClick={() => navigate("/products")}
@@ -85,7 +83,9 @@ export default function ProductDetails() {
 
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+<hr className="mb-8 border-gray-200 dark:border-slate-700" />
+
+<div className="grid md:grid-cols-2 gap-6">
 
           <div>
 

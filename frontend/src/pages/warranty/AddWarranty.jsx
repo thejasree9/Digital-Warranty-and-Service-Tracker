@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { ArrowLeft, Save } from "lucide-react";
+import {
+  ArrowLeft,
+  Save,
+  Upload,
+  ShieldCheck,
+} from "lucide-react";
 
 import { getProducts } from "../../services/productService";
 import { addWarranty } from "../../services/warrantyService";
@@ -13,6 +18,8 @@ export default function AddWarranty() {
   const [products, setProducts] = useState([]);
 
   const [loading, setLoading] = useState(false);
+
+  const [file, setFile] = useState(null);
 
   const [formData, setFormData] = useState({
 
@@ -65,42 +72,64 @@ export default function AddWarranty() {
     });
 
   };
-    const handleSubmit = async (e) => {
+
+  const handleFileChange = (e) => {
+
+    setFile(e.target.files[0]);
+
+  };
+
+  const handleSubmit = async (e) => {
 
     e.preventDefault();
 
     if (!formData.productId) {
+
       toast.error("Please select a product");
+
       return;
+
     }
 
     if (!formData.provider.trim()) {
+
       toast.error("Provider is required");
+
       return;
+
     }
 
     if (!formData.warrantyType.trim()) {
-      toast.error("Warranty type is required");
+
+      toast.error("Warranty Type is required");
+
       return;
+
     }
 
     if (!formData.startDate) {
-      toast.error("Start date is required");
+
+      toast.error("Start Date is required");
+
       return;
+
     }
 
     if (!formData.endDate) {
-      toast.error("End date is required");
+
+      toast.error("End Date is required");
+
       return;
+
     }
 
     try {
 
       setLoading(true);
 
-      await addWarranty(formData);
+      await addWarranty(formData, file);
 
-      toast.success("Warranty added successfully");
+      toast.success("Warranty Added Successfully");
 
       navigate("/warranty");
 
@@ -108,7 +137,13 @@ export default function AddWarranty() {
 
       console.error(error);
 
-      toast.error("Failed to add warranty");
+      toast.error(
+
+        error.response?.data?.message ||
+
+        "Failed to add warranty"
+
+      );
 
     } finally {
 
@@ -117,52 +152,75 @@ export default function AddWarranty() {
     }
 
   };
-
   return (
 
-    <div className="min-h-screen bg-gray-100 dark:bg-slate-900 p-8 transition-colors duration-300">
+  <div className="min-h-screen bg-gradient-to-br from-slate-100 via-blue-50 to-slate-200 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 py-10 px-6">
 
-      <div className="max-w-4xl mx-auto bg-white dark:bg-slate-800 rounded-2xl shadow-md p-8 transition-colors duration-300">
+    <div className="max-w-5xl mx-auto">
 
-        <div className="flex items-center justify-between mb-8">
+      {/* Header */}
 
-          <div>
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
 
-            <h1 className="text-3xl font-bold text-slate-800 dark:text-white">
+        <div>
 
-              Add Warranty
+          <div className="flex items-center gap-3">
 
-            </h1>
+            <div className="w-14 h-14 rounded-2xl bg-blue-600 flex items-center justify-center shadow-lg">
 
-            <p className="text-3xl font-bold text-slate-800 dark:text-white">
+              <ShieldCheck
+                className="text-white"
+                size={28}
+              />
 
-              Register a warranty for your product.
+            </div>
 
-            </p>
+            <div>
+
+              <h1 className="text-3xl font-bold text-slate-800 dark:text-white">
+
+                Add Warranty
+
+              </h1>
+
+              <p className="text-slate-500 dark:text-slate-400 mt-1">
+
+                Register and securely manage your product warranty.
+
+              </p>
+
+            </div>
 
           </div>
 
-          <button
-
-            onClick={() => navigate("/warranty")}
-
-            className="flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-xl"
-
-          >
-
-            <ArrowLeft size={18} />
-
-            Back
-
-          </button>
-
         </div>
+
+        <button
+
+          onClick={() => navigate("/warranty")}
+
+          className="mt-5 md:mt-0 flex items-center gap-2 px-5 py-3 rounded-xl bg-gray-700 hover:bg-gray-800 text-white transition"
+
+        >
+
+          <ArrowLeft size={18} />
+
+          Back
+
+        </button>
+
+      </div>
+
+      {/* Form Card */}
+
+      <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-xl p-8">
 
         <form
           onSubmit={handleSubmit}
-          className="space-y-6"
+          className="space-y-7"
         >
-                    {/* Product */}
+
+          {/* Product */}
 
           <div>
 
@@ -173,15 +231,20 @@ export default function AddWarranty() {
             </label>
 
             <select
+
               name="productId"
+
               value={formData.productId}
+
               onChange={handleChange}
-              className="w-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
+
+              className="w-full rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+
             >
 
               <option value="">
 
-                Select Product
+                Choose Product
 
               </option>
 
@@ -213,12 +276,19 @@ export default function AddWarranty() {
             </label>
 
             <input
+
               type="text"
+
               name="provider"
+
               value={formData.provider}
+
               onChange={handleChange}
-              placeholder="Dell, HP, Samsung..."
-              className="w-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+
+              placeholder="Samsung, Dell, HP..."
+
+              className="w-full rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+
             />
 
           </div>
@@ -234,10 +304,15 @@ export default function AddWarranty() {
             </label>
 
             <select
+
               name="warrantyType"
+
               value={formData.warrantyType}
+
               onChange={handleChange}
-              className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
+
+              className="w-full rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
+
             >
 
               <option value="">
@@ -248,33 +323,32 @@ export default function AddWarranty() {
 
               <option value="Manufacturer">
 
-                Manufacturer
+                Manufacturer Warranty
 
               </option>
 
               <option value="Extended">
 
-                Extended
-
-              </option>
-
-              <option value="Accidental Damage">
-
-                Accidental Damage
+                Extended Warranty
 
               </option>
 
               <option value="Premium">
 
-                Premium
+                Premium Warranty
+
+              </option>
+
+              <option value="Accidental Damage">
+
+                Accidental Damage Protection
 
               </option>
 
             </select>
 
           </div>
-
-          {/* Dates */}
+                    {/* Dates */}
 
           <div className="grid md:grid-cols-2 gap-6">
 
@@ -291,7 +365,22 @@ export default function AddWarranty() {
                 name="startDate"
                 value={formData.startDate}
                 onChange={handleChange}
-                className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
+                className="
+                  w-full
+                  rounded-xl
+                  border
+                  border-gray-300
+                  dark:border-slate-600
+                  bg-white
+                  dark:bg-slate-700
+                  text-slate-800
+                  dark:text-white
+                  px-4
+                  py-3
+                  outline-none
+                  focus:ring-2
+                  focus:ring-blue-500
+                "
               />
 
             </div>
@@ -309,7 +398,22 @@ export default function AddWarranty() {
                 name="endDate"
                 value={formData.endDate}
                 onChange={handleChange}
-                className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500"
+                className="
+                  w-full
+                  rounded-xl
+                  border
+                  border-gray-300
+                  dark:border-slate-600
+                  bg-white
+                  dark:bg-slate-700
+                  text-slate-800
+                  dark:text-white
+                  px-4
+                  py-3
+                  outline-none
+                  focus:ring-2
+                  focus:ring-blue-500
+                "
               />
 
             </div>
@@ -327,35 +431,170 @@ export default function AddWarranty() {
             </label>
 
             <textarea
-              rows="5"
+              rows={5}
               name="terms"
               value={formData.terms}
               onChange={handleChange}
-              placeholder="Enter warranty terms..."
-              className="w-full border rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              placeholder="Enter warranty terms and conditions..."
+              className="
+                w-full
+                rounded-xl
+                border
+                border-gray-300
+                dark:border-slate-600
+                bg-white
+                dark:bg-slate-700
+                text-slate-800
+                dark:text-white
+                px-4
+                py-3
+                outline-none
+                resize-none
+                focus:ring-2
+                focus:ring-blue-500
+              "
             />
+
+          </div>
+
+          {/* Warranty Card Upload */}
+
+          <div>
+
+            <label className="block mb-3 font-semibold text-slate-700 dark:text-slate-300">
+
+              Warranty Card
+
+            </label>
+
+            <label
+              htmlFor="warrantyFile"
+              className="
+                cursor-pointer
+                border-2
+                border-dashed
+                border-blue-400
+                dark:border-slate-500
+                rounded-2xl
+                bg-blue-50
+                dark:bg-slate-700
+                p-8
+                flex
+                flex-col
+                items-center
+                justify-center
+                hover:bg-blue-100
+                dark:hover:bg-slate-600
+                transition-all
+                duration-300
+              "
+            >
+
+              <Upload
+                size={42}
+                className="text-blue-600 mb-4"
+              />
+
+              <h3 className="text-lg font-semibold text-slate-800 dark:text-white">
+
+                Upload Warranty Card
+
+              </h3>
+
+              <p className="text-gray-500 dark:text-gray-300 mt-2">
+
+                Click to browse or drag & drop
+
+              </p>
+
+              <p className="text-sm text-gray-400 mt-1">
+
+                PDF • JPG • JPEG • PNG
+
+              </p>
+
+              {file && (
+
+                <div className="mt-5 bg-green-100 text-green-700 px-4 py-2 rounded-lg font-medium">
+
+                  ✅ {file.name}
+
+                </div>
+
+              )}
+
+              <input
+                id="warrantyFile"
+                type="file"
+                accept=".pdf,.jpg,.jpeg,.png"
+                onChange={handleFileChange}
+                className="hidden"
+              />
+
+            </label>
 
           </div>
                     {/* Buttons */}
 
-          <div className="flex justify-end gap-4 pt-6">
+          <div className="flex flex-col sm:flex-row justify-end gap-4 pt-6">
 
             <button
               type="button"
               onClick={() => navigate("/warranty")}
-              className="px-6 py-3 rounded-xl border border-gray-300 dark:border-slate-600 text-slate-700 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-700 transition"
+              className="
+                px-6
+                py-3
+                rounded-xl
+                border
+                border-gray-300
+                dark:border-slate-600
+                bg-white
+                dark:bg-slate-700
+                text-slate-700
+                dark:text-white
+                hover:bg-gray-100
+                dark:hover:bg-slate-600
+                transition-all
+                duration-300
+              "
             >
+
               Cancel
+
             </button>
 
             <button
               type="submit"
               disabled={loading}
-              className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-3 rounded-xl transition"
+              className="
+                flex
+                items-center
+                justify-center
+                gap-2
+                px-8
+                py-3
+                rounded-xl
+                bg-gradient-to-r
+                from-blue-600
+                to-indigo-600
+                hover:from-blue-700
+                hover:to-indigo-700
+                text-white
+                font-semibold
+                shadow-lg
+                hover:shadow-xl
+                transition-all
+                duration-300
+                disabled:opacity-70
+                disabled:cursor-not-allowed
+              "
             >
-              <Save size={18} />
 
-              {loading ? "Saving..." : "Save Warranty"}
+              <Save size={20} />
+
+              {loading
+                ? "Saving..."
+                : "Save Warranty"}
 
             </button>
 
@@ -367,6 +606,7 @@ export default function AddWarranty() {
 
     </div>
 
-  );
+  </div>
 
+);
 }

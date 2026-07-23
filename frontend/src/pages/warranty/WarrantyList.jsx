@@ -93,14 +93,28 @@ export default function WarrantyList() {
   }
 };
 
-  const filteredWarranty = warranties.filter((item) =>
+  const filteredWarranty = warranties.filter((item) => {
 
-    item.productName
-      ?.toLowerCase()
-      .includes(search.toLowerCase())
+  const value = search.toLowerCase().trim();
 
+  const status =
+    new Date(item.endDate) < new Date()
+      ? "expired"
+      : new Date(item.endDate) <
+        new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      ? "expiring soon"
+      : "active";
+
+  return (
+    item.productName?.toLowerCase().includes(value) ||
+    item.provider?.toLowerCase().includes(value) ||
+    item.warrantyType?.toLowerCase().includes(value) ||
+    item.startDate?.includes(value) ||
+    item.endDate?.includes(value) ||
+    status.includes(value)
   );
 
+});
   return (
 
     <div className="min-h-screen bg-gray-100 dark:bg-slate-900 p-8 transition-colors duration-300">
@@ -145,44 +159,29 @@ export default function WarrantyList() {
 
         {/* Search Card */}
 
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-md p-5 mb-8 transition-colors duration-300">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-md p-6 mb-8">
 
-          <div className="flex flex-col md:flex-row gap-4">
+  <div className="flex flex-col lg:flex-row gap-4">
 
-            <div className="relative flex-1">
+    <div className="relative flex-1">
 
-              <Search
-                size={18}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-              />
+      <Search
+        size={20}
+        className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
+      />
 
-              <input
-                type="text"
-                placeholder="Search by Product Name..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white rounded-xl pl-11 pr-4 py-3 outline-none focus:ring-2 focus:ring-blue-500"
-              />
+      <input
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search by Product Name, Provider, Warranty Type, Status, Start Date or End Date..."
+        className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-blue-500"
+      />
 
-            </div>
+    </div>
+  </div>
 
-            <button
-
-              onClick={loadWarranties}
-
-              className="flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white px-6 rounded-xl"
-
-            >
-
-              <RefreshCcw size={18} />
-
-              Refresh
-
-            </button>
-
-          </div>
-
-        </div>
+</div>
                 {/* Warranty Table */}
 
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-md overflow-hidden overflow-x-auto transition-colors duration-300">

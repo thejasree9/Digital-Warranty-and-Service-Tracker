@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.example.digital_warranty.service.NotificationService;
 
 import java.util.List;
 
@@ -28,18 +29,21 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final CloudinaryService cloudinaryService;
+    private final NotificationService notificationService;
     @Override
     public ProductResponse addProduct(
             ProductRequest request,
             MultipartFile invoice,
             String email) {
-
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        String invoiceUrl = request.getInvoiceUrl();
+        String invoiceUrl = null;
+
         if (invoice != null && !invoice.isEmpty()) {
             invoiceUrl = cloudinaryService.uploadFile(invoice);
+        } else if (request.getInvoiceUrl() != null) {
+            invoiceUrl = request.getInvoiceUrl();
         }
 
         Product product = Product.builder()
@@ -54,6 +58,11 @@ public class ProductServiceImpl implements ProductService {
                 .build();
 
         product = productRepository.save(product);
+        notificationService.createNotification(
+                user,
+                "Product Added",
+                product.getProductName() + " has been added successfully."
+        );
 
         return map(product);
     }
@@ -82,11 +91,12 @@ public class ProductServiceImpl implements ProductService {
 
         return map(product);
     }
-
     @Override
-    public ProductResponse updateProduct(Long id,
-                                         ProductRequest request,
-                                         String email) {
+    public ProductResponse updateProduct(
+            Long id,
+            ProductRequest request,
+            MultipartFile file,
+            String email) {
 
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
@@ -95,6 +105,7 @@ public class ProductServiceImpl implements ProductService {
             throw new UnauthorizedException("Unauthorized");
         }
 
+        // Update product details
         product.setProductName(request.getProductName());
         product.setBrand(request.getBrand());
         product.setModel(request.getModel());
@@ -102,7 +113,28 @@ public class ProductServiceImpl implements ProductService {
         product.setPurchaseDate(request.getPurchaseDate());
         product.setPrice(request.getPrice());
 
-        return map(productRepository.save(product));
+        // Update invoice if a new file is uploaded
+        if (file != null && !file.isEmpty()) {
+
+            String invoiceUrl = cloudinaryService.uploadFile(file);
+
+            product.setInvoiceUrl(invoiceUrl);
+
+        } else if (request.getInvoiceUrl() != null) {
+
+            // Keep the existing invoice URL if no new file is uploaded
+            product.setInvoiceUrl(request.getInvoiceUrl());
+
+        }
+
+        Product updatedProduct = productRepository.save(product);
+        notificationService.createNotification(
+                product.getUser(),
+                "Product Updated",
+                updatedProduct.getProductName() + " has been updated successfully."
+        );
+
+        return map(updatedProduct);
     }
 
     @Override
@@ -114,6 +146,12 @@ public class ProductServiceImpl implements ProductService {
         if (!product.getUser().getEmail().equals(email)) {
             throw new UnauthorizedException("Unauthorized");
         }
+
+        notificationService.createNotification(
+                product.getUser(),
+                "Product Deleted",
+                product.getProductName() + " has been deleted successfully."
+        );
 
         productRepository.delete(product);
     }
@@ -152,7 +190,8 @@ public class ProductServiceImpl implements ProductService {
 
         Page<Product> productPage =
                 productRepository.findByUserEmail(email, pageable);
-
+        System.out.println("Products found: " + productPage.getTotalElements());
+        System.out.println("Content size: " + productPage.getContent().size());
         return ProductPageResponse.builder()
                 .products(
                         productPage.getContent()
@@ -177,6 +216,7 @@ public class ProductServiceImpl implements ProductService {
                 .model(product.getModel())
                 .serialNumber(product.getSerialNumber())
                 .purchaseDate(product.getPurchaseDate())
+                .createdAt(product.getCreatedAt())
                 .price(product.getPrice())
                 .invoiceUrl(product.getInvoiceUrl())
                 .build();

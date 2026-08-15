@@ -5,7 +5,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
+import java.time.LocalDateTime;
 @Data
 @Builder
 public class ProductResponse {
@@ -25,4 +25,5 @@ public class ProductResponse {
     private BigDecimal price;
 
     private String invoiceUrl;
+    private LocalDateTime createdAt;
 }

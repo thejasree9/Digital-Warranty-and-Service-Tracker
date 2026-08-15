@@ -4,7 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
+import org.hibernate.annotations.CreationTimestamp;
+import java.time.LocalDateTime;
 @Entity
 @Table(name = "products")
 @Getter
@@ -34,7 +35,11 @@ public class Product {
 
     private String invoiceUrl;
 
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
 }

@@ -27,7 +27,13 @@ public class CloudinaryServiceImpl implements CloudinaryService {
             return result.get("secure_url").toString();
 
         } catch (Exception e) {
-            throw new RuntimeException("File upload failed");
+
+            e.printStackTrace();
+
+            throw new RuntimeException(
+                    "File upload failed: " + e.getMessage()
+            );
+
         }
     }
 }

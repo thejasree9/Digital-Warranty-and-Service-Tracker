@@ -9,10 +9,12 @@ import org.example.digital_warranty.entity.User;
 import org.example.digital_warranty.exception.ResourceNotFoundException;
 import org.example.digital_warranty.repository.ProductRepository;
 import org.example.digital_warranty.repository.ServiceHistoryRepository;
+import org.example.digital_warranty.service.CloudinaryService;
 import org.example.digital_warranty.service.ServiceHistoryService;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.example.digital_warranty.service.NotificationService;
 
 import java.util.List;
 
@@ -22,12 +24,17 @@ public class ServiceHistoryServiceImpl implements ServiceHistoryService {
 
     private final ServiceHistoryRepository serviceHistoryRepository;
     private final ProductRepository productRepository;
+    private final CloudinaryService cloudinaryService;
+    private final NotificationService notificationService;
 
     @Override
-    public ServiceHistoryResponse addService(ServiceHistoryRequest request) {
+    public ServiceHistoryResponse addService(
+            ServiceHistoryRequest request,
+            MultipartFile file) {
 
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
 
         User currentUser = (User) SecurityContextHolder.getContext()
                 .getAuthentication()
@@ -37,18 +44,33 @@ public class ServiceHistoryServiceImpl implements ServiceHistoryService {
             throw new ResourceNotFoundException("Product not found");
         }
 
+
+        String invoiceUrl = null;
+
+        if (file != null && !file.isEmpty()) {
+            invoiceUrl = cloudinaryService.uploadFile(file);
+        } else if (request.getInvoiceUrl() != null) {
+            invoiceUrl = request.getInvoiceUrl();
+        }
+
         ServiceHistory service = ServiceHistory.builder()
                 .serviceDate(request.getServiceDate())
                 .serviceCenter(request.getServiceCenter())
                 .description(request.getDescription())
                 .cost(request.getCost())
                 .technicianName(request.getTechnicianName())
-                .invoiceUrl(request.getInvoiceUrl())
+                .invoiceUrl(invoiceUrl)
                 .notes(request.getNotes())
                 .product(product)
                 .build();
 
         service = serviceHistoryRepository.save(service);
+
+        notificationService.createNotification(
+                product.getUser(),
+                "Service Added",
+                "A service record has been added for " + product.getProductName() + "."
+        );
 
         return mapToResponse(service);
     }
@@ -79,21 +101,48 @@ public class ServiceHistoryServiceImpl implements ServiceHistoryService {
     }
 
     @Override
-    public ServiceHistoryResponse updateService(Long id,
-                                                ServiceHistoryRequest request) {
+    public ServiceHistoryResponse updateService(
+            Long id,
+            ServiceHistoryRequest request,
+            MultipartFile file) {
 
         ServiceHistory service = serviceHistoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Service record not found"));
+        User currentUser = (User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        if (!service.getProduct().getUser().getId().equals(currentUser.getId())) {
+            throw new ResourceNotFoundException("Service record not found");
+        }
 
         service.setServiceDate(request.getServiceDate());
         service.setServiceCenter(request.getServiceCenter());
         service.setDescription(request.getDescription());
         service.setCost(request.getCost());
         service.setTechnicianName(request.getTechnicianName());
-        service.setInvoiceUrl(request.getInvoiceUrl());
         service.setNotes(request.getNotes());
 
+        if (file != null && !file.isEmpty()) {
+
+            String invoiceUrl = cloudinaryService.uploadFile(file);
+
+            service.setInvoiceUrl(invoiceUrl);
+
+        } else if (request.getInvoiceUrl() != null) {
+
+            service.setInvoiceUrl(request.getInvoiceUrl());
+
+        }
+
         service = serviceHistoryRepository.save(service);
+
+        notificationService.createNotification(
+                service.getProduct().getUser(),
+                "Service Updated",
+                "Service history has been updated for " +
+                        service.getProduct().getProductName() + "."
+        );
 
         return mapToResponse(service);
     }
@@ -103,8 +152,32 @@ public class ServiceHistoryServiceImpl implements ServiceHistoryService {
 
         ServiceHistory service = serviceHistoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Service record not found"));
+        User currentUser = (User) SecurityContextHolder.getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        if (!service.getProduct().getUser().getId().equals(currentUser.getId())) {
+            throw new ResourceNotFoundException("Service record not found");
+        }
+
+        notificationService.createNotification(
+                service.getProduct().getUser(),
+                "Service Deleted",
+                "Service history has been deleted for " +
+                        service.getProduct().getProductName() + "."
+        );
 
         serviceHistoryRepository.delete(service);
+    }
+
+    @Override
+    public List<ServiceHistoryResponse> getAllServices(String email) {
+
+        return serviceHistoryRepository
+                .findByProductUserEmail(email)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
     private ServiceHistoryResponse mapToResponse(ServiceHistory service) {

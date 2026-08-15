@@ -113,4 +113,19 @@ public class WarrantyController {
                         .build()
         );
     }
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<WarrantyResponse>>> getAll(
+            Authentication authentication) {
+
+        List<WarrantyResponse> response =
+                warrantyService.getAllWarranties(authentication.getName());
+
+        return ResponseEntity.ok(
+                ApiResponse.<List<WarrantyResponse>>builder()
+                        .success(true)
+                        .message("Warranties fetched successfully")
+                        .data(response)
+                        .build()
+        );
+    }
 }

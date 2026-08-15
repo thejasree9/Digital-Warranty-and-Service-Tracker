@@ -1,23 +1,11 @@
+
 import API from "./api";
 
-// Get Profile
-export const getProfile = async () => {
-  const response = await API.get("/api/profile");
-  return response.data;
-};
+export const getProfile = () => API.get("/api/profile");
 
-// Update Profile
-export const updateProfile = async (profile) => {
-  const response = await API.put("/api/profile", profile);
-  return response.data;
-};
+export const updateProfile = (data) =>
+  API.put("/api/profile", data);
 
-// Change Password
-export const changePassword = async (passwordData) => {
-  const response = await API.post(
-    "/api/profile/change-password",
-    passwordData
-  );
-
-  return response.data;
-};
+// ADD THIS
+export const changePassword = (data) =>
+  API.post("/api/profile/change-password", data);

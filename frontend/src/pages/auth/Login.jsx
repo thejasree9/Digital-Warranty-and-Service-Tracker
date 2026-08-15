@@ -29,37 +29,33 @@ export default function Login() {
   } = useForm();
 
   const onSubmit = async (data) => {
+  try {
+    setLoading(true);
 
-    try {
+    const response = await loginUser(data);
 
-      setLoading(true);
+    const auth = response.data;
 
-      const response = await loginUser(data);
+    login({
+      token: auth.token,
+      user: {
+        name: auth.name,
+        email: auth.email,
+        role: auth.role,
+      },
+    });
 
-      login({
-        token: response.data.token,
-        user: response.data.user,
-      });
-
-      toast.success("Login Successful");
-
-      navigate("/dashboard");
-
-    } catch (error) {
-
-      toast.error(
-        error.response?.data?.message ||
-        "Invalid Email or Password"
-      );
-
-    } finally {
-
-      setLoading(false);
-
-    }
-
-  };
-
+    toast.success("Login Successful");
+    navigate("/dashboard");
+  } catch (error) {
+    toast.error(
+      error.response?.data?.message ||
+      "Invalid Email or Password"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
   return (
 
     <div

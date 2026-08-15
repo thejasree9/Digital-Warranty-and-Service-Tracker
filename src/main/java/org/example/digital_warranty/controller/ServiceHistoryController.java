@@ -64,6 +64,21 @@ public class ServiceHistoryController {
                         .build()
         );
     }
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<ServiceHistoryResponse>>> getAllServices(
+            Authentication authentication) {
+
+        List<ServiceHistoryResponse> response =
+                serviceHistoryService.getAllServices(authentication.getName());
+
+        return ResponseEntity.ok(
+                ApiResponse.<List<ServiceHistoryResponse>>builder()
+                        .success(true)
+                        .message("Services fetched successfully")
+                        .data(response)
+                        .build()
+        );
+    }
 
     // Get All Services
     @GetMapping

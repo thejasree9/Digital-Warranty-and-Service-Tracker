@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface ServiceHistoryRepository extends JpaRepository<ServiceHistory, Long> {
 
     List<ServiceHistory> findByProductId(Long productId);
+    List<ServiceHistory> findByProductUserEmail(String email);
     long countByProductUserId(Long userId);
 
     @Query("""

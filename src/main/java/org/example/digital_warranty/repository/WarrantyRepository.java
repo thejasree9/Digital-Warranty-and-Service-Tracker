@@ -8,6 +8,9 @@ import java.time.LocalDate;
 import java.util.List;
 public interface WarrantyRepository extends JpaRepository<Warranty,Long> {
 
+
+    List<Warranty> findByProductUserEmail(String email);
+
     Optional<Warranty> findByProductId(Long productId);
     long countByProductUserIdAndEndDateGreaterThanEqual(
             Long userId,

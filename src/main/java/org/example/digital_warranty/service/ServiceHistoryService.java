@@ -10,6 +10,7 @@ public interface ServiceHistoryService {
     ServiceHistoryResponse addService(ServiceHistoryRequest request);
 
     ServiceHistoryResponse getServiceById(Long id);
+    List<ServiceHistoryResponse> getAllServices(String email);
 
     List<ServiceHistoryResponse> getServicesByProduct(Long productId);
 

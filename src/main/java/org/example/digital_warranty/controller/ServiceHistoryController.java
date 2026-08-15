@@ -8,6 +8,7 @@ import org.example.digital_warranty.dto.response.ApiResponse;
 import org.example.digital_warranty.service.ServiceHistoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,6 +48,21 @@ public class ServiceHistoryController {
                 ApiResponse.<ServiceHistoryResponse>builder()
                         .success(true)
                         .message("Service history fetched successfully")
+                        .data(response)
+                        .build()
+        );
+    }
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<ServiceHistoryResponse>>> getAllServices(
+            Authentication authentication) {
+
+        List<ServiceHistoryResponse> response =
+                serviceHistoryService.getAllServices(authentication.getName());
+
+        return ResponseEntity.ok(
+                ApiResponse.<List<ServiceHistoryResponse>>builder()
+                        .success(true)
+                        .message("Services fetched successfully")
                         .data(response)
                         .build()
         );

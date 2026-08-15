@@ -25,6 +25,4 @@ public interface ServiceHistoryService {
     );
 
     void deleteService(Long id);
-
-    List<ServiceHistoryResponse> getAllServices(String email);
 }

@@ -139,14 +139,4 @@ public class WarrantyServiceImpl implements WarrantyService {
                 .terms(warranty.getTerms())
                 .build();
     }
-    @Override
-    public List<WarrantyResponse> getAllWarranties(String email) {
-
-        return warrantyRepository
-                .findByProductUserEmail(email)
-                .stream()
-                .map(this::map)
-                .toList();
-
-    }
 }

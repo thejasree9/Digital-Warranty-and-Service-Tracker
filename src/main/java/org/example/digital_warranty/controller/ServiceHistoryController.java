@@ -80,25 +80,6 @@ public class ServiceHistoryController {
         );
     }
 
-    // Get All Services
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<ServiceHistoryResponse>>> getAllServices(
-            Authentication authentication) {
-
-        List<ServiceHistoryResponse> response =
-                serviceHistoryService.getAllServices(
-                        authentication.getName()
-                );
-
-        return ResponseEntity.ok(
-                ApiResponse.<List<ServiceHistoryResponse>>builder()
-                        .success(true)
-                        .message("Service history fetched successfully")
-                        .data(response)
-                        .build()
-        );
-    }
-
     // Get Services By Product
     @GetMapping("/product/{productId}")
     public ResponseEntity<ApiResponse<List<ServiceHistoryResponse>>> getServicesByProduct(

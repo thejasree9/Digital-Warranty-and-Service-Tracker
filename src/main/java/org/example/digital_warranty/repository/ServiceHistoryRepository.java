@@ -19,6 +19,5 @@ public interface ServiceHistoryRepository extends JpaRepository<ServiceHistory, 
        WHERE s.product.user.id = :userId
        """)
     BigDecimal getTotalMaintenanceCost(Long userId);
-    List<ServiceHistory> findByProductUserEmail(String email);
 
 }

@@ -63,18 +63,18 @@ const Profile = () => {
     try {
 
       const [profileRes, dashboardRes] = await Promise.all([
-        getProfile(),
-        getDashboard(),
-      ]);
+  getProfile(),
+  getDashboard(),
+]);
 
-      setProfile(profileRes);
+setProfile(profileRes.data.data);
 
-      setDashboard(dashboardRes.data);
+setDashboard(dashboardRes.data.data);
 
-      setFormData({
-        name: profileRes.name || "",
-        phone: profileRes.phone || "",
-      });
+setFormData({
+  name: profileRes.data.data.name || "",
+  phone: profileRes.data.data.phone || "",
+});
 
     } catch (error) {
 

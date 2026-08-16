@@ -25,4 +25,7 @@ public class WarrantyResponse {
 
     private String terms;
 
+    // Cloudinary URL
+    private String warrantyCardUrl;
+
 }

@@ -22,37 +22,22 @@ export const getWarranty = async (productId) => {
 
 // Add warranty
 export const addWarranty = async (warranty, file) => {
-
   const formData = new FormData();
 
   formData.append(
     "warranty",
-    new Blob(
-      [JSON.stringify(warranty)],
-      {
-        type: "application/json",
-      }
-    )
+    new Blob([JSON.stringify(warranty)], {
+      type: "application/json",
+    })
   );
 
   if (file) {
-
     formData.append("file", file);
-
   }
 
-  const response = await API.post(
-    "/api/warranty",
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
+  const response = await API.post("/api/warranty", formData);
 
   return response.data;
-
 };
 
 // Update warranty
@@ -81,14 +66,9 @@ export const updateWarranty = async (
   }
 
   const response = await API.put(
-    `/api/warranty/${productId}`,
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
+  `/api/warranty/${productId}`,
+  formData
+);
 
   return response.data;
 

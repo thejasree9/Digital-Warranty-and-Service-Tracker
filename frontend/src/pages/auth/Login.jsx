@@ -33,6 +33,7 @@ export default function Login() {
     setLoading(true);
 
     const response = await loginUser(data);
+    console.log("LOGIN RESPONSE:", response);
     const auth = response.data;
 
     login({

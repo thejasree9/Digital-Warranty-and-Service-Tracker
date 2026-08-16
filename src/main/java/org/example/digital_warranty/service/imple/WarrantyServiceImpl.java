@@ -9,9 +9,11 @@ import org.example.digital_warranty.exception.ResourceNotFoundException;
 import org.example.digital_warranty.exception.UnauthorizedException;
 import org.example.digital_warranty.repository.ProductRepository;
 import org.example.digital_warranty.repository.WarrantyRepository;
+import org.example.digital_warranty.service.CloudinaryService;
 import org.example.digital_warranty.service.WarrantyService;
 import org.springframework.stereotype.Service;
 import org.example.digital_warranty.service.NotificationService;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,19 +23,28 @@ import java.util.List;
 @RequiredArgsConstructor
 public class WarrantyServiceImpl implements WarrantyService {
 
+    private final CloudinaryService cloudinaryService;
     private final WarrantyRepository warrantyRepository;
     private final ProductRepository productRepository;
     private final NotificationService notificationService;
 
     @Override
     public WarrantyResponse addWarranty(WarrantyRequest request,
+                                        MultipartFile file,
                                         String email) {
 
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
-        if (!product.getUser().getEmail().equals(email))
+        if (!product.getUser().getEmail().equals(email)) {
             throw new UnauthorizedException("Unauthorized");
+        }
+
+        String warrantyCardUrl = null;
+
+        if (file != null && !file.isEmpty()) {
+            warrantyCardUrl = cloudinaryService.uploadFile(file);
+        }
 
         Warranty warranty = Warranty.builder()
                 .startDate(request.getStartDate())
@@ -41,10 +52,12 @@ public class WarrantyServiceImpl implements WarrantyService {
                 .warrantyType(request.getWarrantyType())
                 .provider(request.getProvider())
                 .terms(request.getTerms())
+                .warrantyCardUrl(warrantyCardUrl)
                 .product(product)
                 .build();
 
         warranty = warrantyRepository.save(warranty);
+
         notificationService.createNotification(
                 product.getUser(),
                 "Warranty Added",
@@ -137,6 +150,7 @@ public class WarrantyServiceImpl implements WarrantyService {
                 .warrantyType(warranty.getWarrantyType())
                 .provider(warranty.getProvider())
                 .terms(warranty.getTerms())
+                .warrantyCardUrl(warranty.getWarrantyCardUrl())
                 .build();
     }
 }

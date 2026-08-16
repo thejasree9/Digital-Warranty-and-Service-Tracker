@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @RestController
@@ -20,13 +22,15 @@ public class WarrantyController {
 
     private final WarrantyService warrantyService;
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<WarrantyResponse>> add(
-            @Valid @RequestBody WarrantyRequest request,
+            @RequestPart("warranty") @Valid WarrantyRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file,
             Authentication authentication) {
 
         WarrantyResponse response = warrantyService.addWarranty(
                 request,
+                file,
                 authentication.getName()
         );
 

@@ -16,7 +16,6 @@ public class Warranty {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
 
     private LocalDate startDate;
@@ -29,6 +28,9 @@ public class Warranty {
 
     @Column(length = 1000)
     private String terms;
+
+    // ✅ Cloudinary image URL
+    private String warrantyCardUrl;
 
     @Column(nullable = false)
     @Builder.Default

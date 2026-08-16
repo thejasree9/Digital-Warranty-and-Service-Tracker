@@ -19,11 +19,11 @@ public class CorsConfig {
         config.setAllowCredentials(true);
 
         config.setAllowedOriginPatterns(List.of(
-                "http://localhost:*"
+                "http://localhost:*",
+                "https://amazing-stardust-fa2ce1.netlify.app"
         ));
 
         config.setAllowedHeaders(List.of("*"));
-
         config.setAllowedMethods(List.of("*"));
 
         UrlBasedCorsConfigurationSource source =

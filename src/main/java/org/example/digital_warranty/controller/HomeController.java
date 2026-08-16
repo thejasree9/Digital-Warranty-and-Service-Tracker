@@ -6,9 +6,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HomeController {
 
+    @GetMapping("/")
+    public String home() {
+        return "Digital Warranty Backend is Running!";
+    }
+
     @GetMapping("/hello")
     public String hello() {
         return "JWT Authentication Successful";
     }
-
 }

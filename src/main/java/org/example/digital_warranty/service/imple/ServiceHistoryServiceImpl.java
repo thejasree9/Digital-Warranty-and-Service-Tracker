@@ -92,6 +92,13 @@ public class ServiceHistoryServiceImpl implements ServiceHistoryService {
                 .map(this::mapToResponse)
                 .toList();
     }
+    @Override
+    public List<ServiceHistoryResponse> getAllServices(String email) {
+        return serviceHistoryRepository.findByProductUserEmail(email)
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
 
     @Override
     public ServiceHistoryResponse updateService(
@@ -161,16 +168,6 @@ public class ServiceHistoryServiceImpl implements ServiceHistoryService {
         );
 
         serviceHistoryRepository.delete(service);
-    }
-
-    @Override
-    public List<ServiceHistoryResponse> getAllServices(String email) {
-
-        return serviceHistoryRepository
-                .findByProductUserEmail(email)
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
     }
 
     private ServiceHistoryResponse mapToResponse(ServiceHistory service) {

@@ -1,6 +1,8 @@
 package org.example.digital_warranty.service.imple;
 
 import lombok.RequiredArgsConstructor;
+import org.example.digital_warranty.dto.AuthResponse;
+import org.example.digital_warranty.dto.LoginRequest;
 import org.example.digital_warranty.dto.RegisterRequest;
 import org.example.digital_warranty.dto.UserResponse;
 import org.example.digital_warranty.entity.Role;
@@ -10,14 +12,14 @@ import org.example.digital_warranty.repository.UserRepository;
 import org.example.digital_warranty.service.AuthService;
 import org.example.digital_warranty.service.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.example.digital_warranty.dto.AuthResponse;
-import org.example.digital_warranty.dto.LoginRequest;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
+
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -26,7 +28,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String register(RegisterRequest request) {
 
-        if(userRepository.existsByEmail(request.getEmail())){
+        if (userRepository.existsByEmail(request.getEmail())) {
             return "Email already exists";
         }
 
@@ -41,6 +43,7 @@ public class AuthServiceImpl implements AuthService {
 
         return "User Registered Successfully";
     }
+
     @Override
     public AuthResponse login(LoginRequest request) {
 

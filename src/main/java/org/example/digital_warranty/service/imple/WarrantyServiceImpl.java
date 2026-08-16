@@ -15,6 +15,8 @@ import org.example.digital_warranty.service.NotificationService;
 
 import java.util.List;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class WarrantyServiceImpl implements WarrantyService {
@@ -66,6 +68,13 @@ public class WarrantyServiceImpl implements WarrantyService {
                 warrantyRepository.findByProductId(productId)
                         .orElseThrow()
         );
+    }
+    @Override
+    public List<WarrantyResponse> getAllWarranties(String email) {
+        return warrantyRepository.findByProductUserEmail(email)
+                .stream()
+                .map(this::map)
+                .toList();
     }
 
     @Override
@@ -129,15 +138,5 @@ public class WarrantyServiceImpl implements WarrantyService {
                 .provider(warranty.getProvider())
                 .terms(warranty.getTerms())
                 .build();
-    }
-    @Override
-    public List<WarrantyResponse> getAllWarranties(String email) {
-
-        return warrantyRepository
-                .findByProductUserEmail(email)
-                .stream()
-                .map(this::map)
-                .toList();
-
     }
 }

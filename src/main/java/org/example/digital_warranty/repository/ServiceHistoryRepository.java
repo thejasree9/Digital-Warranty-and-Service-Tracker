@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface ServiceHistoryRepository extends JpaRepository<ServiceHistory, Long> {
 
     List<ServiceHistory> findByProductId(Long productId);
+    List<ServiceHistory> findByProductUserEmail(String email);
     long countByProductUserId(Long userId);
 
     @Query("""
@@ -18,6 +19,5 @@ public interface ServiceHistoryRepository extends JpaRepository<ServiceHistory, 
        WHERE s.product.user.id = :userId
        """)
     BigDecimal getTotalMaintenanceCost(Long userId);
-    List<ServiceHistory> findByProductUserEmail(String email);
 
 }

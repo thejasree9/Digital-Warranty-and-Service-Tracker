@@ -14,6 +14,7 @@ public interface ServiceHistoryService {
     );
 
     ServiceHistoryResponse getServiceById(Long id);
+    List<ServiceHistoryResponse> getAllServices(String email);
 
     List<ServiceHistoryResponse> getServicesByProduct(Long productId);
 
@@ -24,6 +25,4 @@ public interface ServiceHistoryService {
     );
 
     void deleteService(Long id);
-
-    List<ServiceHistoryResponse> getAllServices(String email);
 }

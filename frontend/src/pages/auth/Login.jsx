@@ -32,7 +32,8 @@ export default function Login() {
   try {
     setLoading(true);
 
-    const auth = await loginUser(data);
+    const response = await loginUser(data);
+    const auth = response.data;
 
     login({
       token: auth.token,

@@ -34,16 +34,12 @@ export default function Login() {
 
     const response = await loginUser(data);
 
-    const auth = response.data;
+const auth = response.data;
 
-    login({
-      token: auth.token,
-      user: {
-        name: auth.name,
-        email: auth.email,
-        role: auth.role,
-      },
-    });
+login({
+  token: auth.token,
+  user: auth.user,
+});
 
     toast.success("Login Successful");
     navigate("/dashboard");

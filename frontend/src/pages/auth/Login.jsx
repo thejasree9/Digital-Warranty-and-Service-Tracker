@@ -32,21 +32,22 @@ export default function Login() {
   try {
     setLoading(true);
 
-    const response = await loginUser(data);
+    const auth = await loginUser(data);
 
-const auth = response.data;
-
-login({
-  token: auth.token,
-  user: auth.user,
-});
+    login({
+      token: auth.token,
+      user: {
+        name: auth.name,
+        email: auth.email,
+        role: auth.role,
+      },
+    });
 
     toast.success("Login Successful");
     navigate("/dashboard");
   } catch (error) {
     toast.error(
-      error.response?.data?.message ||
-      "Invalid Email or Password"
+      error.response?.data?.message || "Invalid Email or Password"
     );
   } finally {
     setLoading(false);
